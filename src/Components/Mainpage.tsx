@@ -1,116 +1,95 @@
-import * as React from 'react';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import Button from '@mui/material/Button';
+import { useUser } from '../UserContext';
+import { Box, Typography, Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from '@mui/material';
 
-interface Column {
-  id: 'name' | 'email' | 'password' | 'actions';
-  label: string;
-  minWidth?: number;
-  align?: 'right';
-}
-
-const columns: readonly Column[] = [
-  { id: 'name', label: 'Name', minWidth: 170 },
-  { id: 'email', label: 'Email ID', minWidth: 170 },
-  { id: 'password', label: 'Password', minWidth: 170 },
-  { id: 'actions', label: 'Actions', minWidth: 170, },
-];
-
-interface Data {
-  name: string;
-  email: string;
-  password: string;
-}
-
-function createData(name: string, email: string, password: string): Data {
-  return { name, email, password };
-}
-
-const rows = [
-  createData('John Doe', 'john@example.com', 'password123'),
-  createData('Jane Smith', 'jane@example.com', 'password456'),
-  createData('Sam Wilson', 'sam@example.com', 'password789'),
-];
-
-export default function StickyHeadTable() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
-  const handleActionClick = (name: string) => {
-    console.log(`Action clicked for ${name}`);
-  };
+const MainPage = () => {
+  const { user } = useUser();
 
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ maxHeight: 440 }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, index) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                    {columns.map((column) => {
-                      const value = row[column.id as keyof Data];
-                      if (column.id === 'actions') {
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            <Button variant="contained" onClick={() => handleActionClick(row.name)}>
-                              Active
-                            </Button>
-                          </TableCell>
-                        );
-                      }
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+
+    <Box
+      sx={{
+        height: '100vh',
+        backgroundImage: 'url(https://image.slidesdocs.com/responsive-images/slides/12-green-cartoon-wind-autumn-and-winter-flu-prevention-powerpoint-background_52901dcfdf__960_540.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        color: 'white',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
+        padding: '20px',
+        position: 'relative',
+        overflow: 'hidden',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          color: 'white',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          backdropFilter: 'blur(10px)',
+          zIndex: -1,
+        },
+      }}
+    >
+      
+      {user ? (
+      <Typography sx={{
+        marginleft:'-641',marginTop:'50'
+      }}>
+        <Card sx={{ padding: '20px', color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.7)' ,marginleft:'-641',marginTop:'50'}}>
+          <Typography variant="h4" gutterBottom>Welcome, {user.name}!</Typography>
+          {/* <Typography variant="body1" gutterBottom>Email: {user.email}</Typography>
+          <Typography variant="body1" gutterBottom>Password: {user.password}</Typography> */}
+
+          <TableContainer sx={{ marginTop: '20px', backgroundColor: 'transparent' }}>
+            <Table sx={{ border: '1px solid white' }}>
+              <TableHead>
+                {/* <TableRow>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Property</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Value</TableCell>
+                </TableRow> */}
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell sx={{ color: 'white' }}>Name</TableCell>
+                  <TableCell sx={{ color: 'white' }}>{user.name}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell sx={{ color: 'white' }}>Email</TableCell>
+                  <TableCell sx={{ color: 'white' }}>{user.email}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell sx={{ color: 'white' }}>Password</TableCell>
+                  <TableCell sx={{ color: 'white' }}>{user.password}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          {/* Active Button */}
+          {/* <Box sx={{ marginTop: '20px' }}>
+            <Button
+              variant="contained"
+              color={isActive ? 'success' : 'error'}
+              onClick={toggleActiveStatus}
+            >
+              {isActive ? 'Active' : 'Inactive'}
+            </Button> */}
+          {/* </Box> */}
+          
+        </Card>
+        </Typography>
+      ) : (
+        <Typography variant="h6">No user data available.</Typography>
+      )}
+    
+    </Box>
+  
   );
-}
+};
+
+export default MainPage;
