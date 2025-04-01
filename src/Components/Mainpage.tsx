@@ -1,5 +1,5 @@
 import { useUser } from '../UserContext';
-import { Box, Typography, Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from '@mui/material';
+import { Box, Typography, Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 const MainPage = () => {
   const { user } = useUser();
