@@ -21,7 +21,7 @@ export default function SignupCard() {
   const validationSchema = Yup.object({
     name: Yup.string()
       .matches(/^[a-zA-Z]+$/, "Username must contain only letters.")
-      .min(3, "Username must be at least 3 characters.")
+      .min(3, "Username must be at least  characters.")
       .required("Username is required"),
   
     email: Yup.string()
@@ -104,7 +104,7 @@ export default function SignupCard() {
             }}
           >
             <Typography variant="h5" component="div" gutterBottom align="center">
-              Sign Up
+              sign Up
             </Typography>
 
             <form onSubmit={handleSubmit(onSubmit)}>
