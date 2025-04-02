@@ -5,4 +5,9 @@
     password: string
     
   }
-  
+  export type FormDatas = {
+
+    email: string
+    password: string
+    
+  }

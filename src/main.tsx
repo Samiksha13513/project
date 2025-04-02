@@ -10,7 +10,7 @@
 
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import { UserProvider } from "./UserContext"; // Import the UserProvider
+import { UserProvider } from "./ContextApi/UserContext"; // Import the UserProvider
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <UserProvider>

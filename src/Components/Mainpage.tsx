@@ -1,4 +1,4 @@
-import { useUser } from '../UserContext';
+import { useUser } from '../ContextApi/UserContext';
 import { Box, Typography, Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 const MainPage = () => {
@@ -42,16 +42,10 @@ const MainPage = () => {
       }}>
         <Card sx={{ padding: '20px', color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.7)' ,marginleft:'-641',marginTop:'50'}}>
           <Typography variant="h4" gutterBottom>Welcome, {user.name}!</Typography>
-          {/* <Typography variant="body1" gutterBottom>Email: {user.email}</Typography>
-          <Typography variant="body1" gutterBottom>Password: {user.password}</Typography> */}
-
+        
           <TableContainer sx={{ marginTop: '20px', backgroundColor: 'transparent' }}>
             <Table sx={{ border: '1px solid white' }}>
               <TableHead>
-                {/* <TableRow>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Property</TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Value</TableCell>
-                </TableRow> */}
               </TableHead>
               <TableBody>
                 <TableRow>
@@ -69,17 +63,6 @@ const MainPage = () => {
               </TableBody>
             </Table>
           </TableContainer>
-
-          {/* Active Button */}
-          {/* <Box sx={{ marginTop: '20px' }}>
-            <Button
-              variant="contained"
-              color={isActive ? 'success' : 'error'}
-              onClick={toggleActiveStatus}
-            >
-              {isActive ? 'Active' : 'Inactive'}
-            </Button> */}
-          {/* </Box> */}
           
         </Card>
         </Typography>

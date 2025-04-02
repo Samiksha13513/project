@@ -2,7 +2,8 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Button from '@mui/material/Button';
 
-export default function SimpleBackdrop({lodarState, setOpen}: any) {
+
+export default function SimpleBackdrop({ loaderState, setOpen }: { loaderState: boolean; setOpen: (state: boolean) => void }) {
 //   const [open, setOpen] = React.useState(false);
   const handleClose = () => {
     setOpen(false);
@@ -13,10 +14,10 @@ export default function SimpleBackdrop({lodarState, setOpen}: any) {
 
   return (
     <div>
-      <Button onClick={handleOpen}>Show backdrop</Button>
+      <Button onClick={handleOpen}></Button>
       <Backdrop
         sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
-        open={lodarState}
+        open={loaderState}
         onClick={handleClose}
       >
         <CircularProgress color="inherit" />

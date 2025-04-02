@@ -9,20 +9,32 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import { useState } from "react";
-import { useUser } from "../UserContext";
+import { useUser } from "../ContextApi/UserContext";
 import SimpleBackdrop from "./Loader";
+import {Link }from 'react-router-dom';
 
 export default function SignupCard() {
   const { setUser } = useUser();
   const navigate = useNavigate();
 
+ 
   const validationSchema = Yup.object({
-    name: Yup.string().required("Username is required"),
+    name: Yup.string()
+      .matches(/^[a-zA-Z]+$/, "Username must contain only letters.")
+      .min(3, "Username must be at least 3 characters.")
+      .required("Username is required"),
+  
     email: Yup.string()
       .email("Invalid email address")
+      .matches(/^[a-zA-Z0-9._%+-]+@gmail\.com$/, "Email must be a valid Gmail address.")
       .required("Email is required"),
+  
     password: Yup.string()
       .min(6, "Password must be at least 6 characters")
+      .matches(/[a-z]/, "Password must contain at least one lowercase letter.")
+      .matches(/[A-Z]/, "Password must contain at least one uppercase letter.")
+      .matches(/\d/, "Password must contain at least one number.")
+      .matches(/[!@#$%^&*()_+={}\[\]:;"'<>,.?/-]/, "Password must contain at least one special character.")
       .required("Password is required"),
   });
 
@@ -34,36 +46,38 @@ export default function SignupCard() {
   const [showPassword, setShowPassword] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [lodarState, setOpen] = useState(false); // Loader state
+  const [loaderState, setOpen] = useState(false); 
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleCloseSnackbar = () => {
-    setSnackbarOpen(false); // Close Snackbar
+    setSnackbarOpen(false); 
   };
 
   const onSubmit = (data: FormData) => {
-    setOpen(true); // Show loader when form is submitted
-
-    // Simulate sign up (you can replace this with an actual API call)
+    setOpen(true); 
+  
     setUser({
       name: data.name,
       email: data.email,
       password: data.password,
     });
-
-    setSnackbarMessage("Sign Up successful!"); // Set message
-    setSnackbarOpen(true); // Open Snackbar
-
+  
+    
+    setSnackbarMessage("Sign Up successful!");
+    setSnackbarOpen(true);
+  
+  
     setTimeout(() => {
-      setOpen(false); // Hide loader after 2 seconds
-      navigate("/login"); // Navigate to login page after a delay
-    }, 2000); // Delay to show Snackbar before navigating
+      setOpen(false); 
+      navigate("/login"); 
+    }, 800); 
   };
+  
 
   return (
     <>
-      <SimpleBackdrop lodarState={lodarState} setOpen={setOpen} />
+      <SimpleBackdrop loaderState={loaderState} setOpen={setOpen} />
       <Typography
         sx={{
           backgroundImage: 'url("https://cdn.dribbble.com/userupload/12426545/file/original-ffb3b267b3b794af825acf4978c4cd3d.jpg?resize=1024x768&vertical=center")',
@@ -140,23 +154,33 @@ export default function SignupCard() {
                   ),
                 }}
               />
-              <Button
-                variant="contained"
-                fullWidth
-                sx={{
-                  marginTop: 2,
-                  background: "linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%)",
-                  color: "white",
-                }}
-                type="submit"
-              >
-                Sign Up
-              </Button>
+            <Typography gutterBottom align="center">
+  <Button
+    variant="contained"
+    fullWidth
+    sx={{
+      marginTop: 2,
+      background: "linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%)",
+      color: "white",
+      borderRadius: 2,
+      '&:hover': {
+        background: "linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 35%, rgba(0,212,255,1) 100%)",
+      },
+    }}
+    type="submit"
+  >
+    Sign in
+  </Button>
+  <Link to='/login' className="text-blue-600 text-sm mt-3 hover:underline text-center" >
+    Already Registered? | Login
+  </Link>
+</Typography>
+
             </form>
           </Card>
         </Box>
 
-        {/* Snackbar component */}
+     
         <Snackbar
           open={snackbarOpen}
           autoHideDuration={2000}
