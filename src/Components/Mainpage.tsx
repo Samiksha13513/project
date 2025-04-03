@@ -1,78 +1,117 @@
+import * as React from 'react';
 import { useUser } from '../ContextApi/UserContext';
-import { Box, Typography, Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Box, Typography, Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, IconButton, AppBar, Toolbar, Container } from '@mui/material';
+import { Visibility, Delete, ExitToApp } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import { createTheme } from '@mui/material/styles';
+import { AppProvider, type Session, type Navigation } from '@toolpad/core/AppProvider';
+import { DashboardLayout } from '@toolpad/core/DashboardLayout';
+
+const NAVIGATION: Navigation = [
+  { segment: 'dashboard', title: 'Dashboard', icon: <DashboardIcon /> },
+];
+
+const demoTheme = createTheme({
+  cssVariables: { colorSchemeSelector: 'data-toolpad-color-scheme' },
+  colorSchemes: { light: true, dark: true },
+  breakpoints: { values: { xs: 0, sm: 600, md: 600, lg: 1200, xl: 1536 } },
+});
 
 const MainPage = () => {
-  const { user } = useUser();
+  const { user, setUser } = useUser();
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) setUser(JSON.parse(storedUser));
+  }, [setUser]);
+
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+    navigate('/');
+  };
+
+  const handleDelete = () => {
+    localStorage.removeItem('user');
+    setUser(null);
+    navigate('/mainpage');
+  };
+
+  const DemoPageContent = () => (
+    <Box sx={{ py: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+      <Card sx={{ padding: 3 }}>
+        {user ? (
+          <>
+            <Typography variant="h4" gutterBottom>Welcome, {user.name}!</Typography>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Email</TableCell>
+                    <TableCell>Password</TableCell>
+                    <TableCell>Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>{user.name}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{user.password}</TableCell>
+                    <TableCell>
+                      <IconButton onClick={() => alert('Viewing user details')} color="primary"><Visibility /></IconButton>
+                      <IconButton onClick={handleDelete} color="error"><Delete /></IconButton>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </>
+        ) : (
+          <Typography>No user data available</Typography>
+        )}
+      </Card>
+    </Box>
+  );
+
 
   return (
-
-    <Box
-      sx={{
-        height: '100vh',
-        backgroundImage: 'url(https://image.slidesdocs.com/responsive-images/slides/12-green-cartoon-wind-autumn-and-winter-flu-prevention-powerpoint-background_52901dcfdf__960_540.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        color: 'white',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        textAlign: 'center',
-        padding: '20px',
-        position: 'relative',
-        overflow: 'hidden',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          color: 'white',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          backdropFilter: 'blur(10px)',
-          zIndex: -1,
-        },
-      }}
-    >
-      
-      {user ? (
-      <Typography sx={{
-        marginleft:'-641',marginTop:'50'
-      }}>
-        <Card sx={{ padding: '20px', color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.7)' ,marginleft:'-641',marginTop:'50'}}>
-          <Typography variant="h4" gutterBottom>Welcome, {user.name}!</Typography>
-        
-          <TableContainer sx={{ marginTop: '20px', backgroundColor: 'transparent' }}>
-            <Table sx={{ border: '1px solid white' }}>
-              <TableHead>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell sx={{ color: 'white' }}>Name</TableCell>
-                  <TableCell sx={{ color: 'white' }}>{user.name}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell sx={{ color: 'white' }}>Email</TableCell>
-                  <TableCell sx={{ color: 'white' }}>{user.email}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell sx={{ color: 'white' }}>Password</TableCell>
-                  <TableCell sx={{ color: 'white' }}>{user.password}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-          
-        </Card>
-        </Typography>
-      ) : (
-        <Typography variant="h6">No user data available.</Typography>
-      )}
-    
-    </Box>
-  
+    // <AppProvider session={session} navigation={NAVIGATION} theme={demoTheme}>
+      <DashboardLayout>
+        <AppBar position="sticky">
+          <Toolbar>
+            <Typography variant="h6" sx={{ flexGrow: 1 }}>User Dashboard</Typography>
+            {user && (
+              <>
+                <Button color="inherit" onClick={handleLogout} startIcon={<ExitToApp />}>Logout</Button>
+                <Button color="inherit">Profile</Button>
+              </>
+            )}
+          </Toolbar>
+        </AppBar>
+        <Container sx={{ flexGrow: 1, padding: 3 }}>
+          <DemoPageContent />
+        </Container>
+      </DashboardLayout>
+    // </AppProvider>
   );
 };
-
 export default MainPage;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
