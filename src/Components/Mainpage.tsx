@@ -1,115 +1,140 @@
-import * as React from 'react';
-import { useUser } from '../ContextApi/UserContext';
-import { Box, Typography, Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, IconButton, AppBar, Toolbar, Container } from '@mui/material';
-import { Visibility, Delete, ExitToApp } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
-import DashboardIcon from '@mui/icons-material/Dashboard';
+
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import { createTheme } from '@mui/material/styles';
-import { AppProvider, type Session, type Navigation } from '@toolpad/core/AppProvider';
-import { DashboardLayout } from '@toolpad/core/DashboardLayout';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import SearchIcon from '@mui/icons-material/Search';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import { AppProvider, type Navigation, } from '@toolpad/core/AppProvider';
+import {DashboardLayout,ThemeSwitcher,type SidebarFooterProps,
+} from '@toolpad/core/DashboardLayout';
+import Tooltip from '@mui/material/Tooltip';
+import Myprofile from './Myprofile';
+import Tables from './Table';
 
 const NAVIGATION: Navigation = [
-  { segment: 'dashboard', title: 'Dashboard', icon: <DashboardIcon /> },
+  {
+    segment: 'dashboard',
+    title: 'User Dashboard',
+    icon: <DashboardIcon />,
+  },
+  {
+    segment: 'users',
+    title: 'All Users',
+    icon: <AccountBoxIcon />,
+  },
 ];
-
 const demoTheme = createTheme({
-  cssVariables: { colorSchemeSelector: 'data-toolpad-color-scheme' },
+  cssVariables: {
+    colorSchemeSelector: 'data-toolpad-color-scheme',
+  },
   colorSchemes: { light: true, dark: true },
-  breakpoints: { values: { xs: 0, sm: 600, md: 600, lg: 1200, xl: 1536 } },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 600,
+      lg: 1200,
+      xl: 1536,
+    },
+  },
 });
-
 const MainPage = () => {
-  const { user, setUser } = useUser();
-  const navigate = useNavigate();
-
-  React.useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) setUser(JSON.parse(storedUser));
-  }, [setUser]);
-
-  const handleLogout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
-    navigate('/');
-  };
-
-  const handleDelete = () => {
-    localStorage.removeItem('user');
-    setUser(null);
-    navigate('/mainpage');
-  };
-
-  const DemoPageContent = () => (
-    <Box sx={{ py: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-      <Card sx={{ padding: 3 }}>
-        {user ? (
-          <>
-            <Typography variant="h4" gutterBottom>Welcome, {user.name}!</Typography>
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Email</TableCell>
-                    <TableCell>Password</TableCell>
-                    <TableCell>Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell>{user.name}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.password}</TableCell>
-                    <TableCell>
-                      <IconButton onClick={() => alert('Viewing user details')} color="primary"><Visibility /></IconButton>
-                      <IconButton onClick={handleDelete} color="error"><Delete /></IconButton>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </>
-        ) : (
-          <Typography>No user data available</Typography>
-        )}
-      </Card>
+ 
+  const DemoPageContent = ({ pathname }: { pathname: string }) => (
+    <Box
+      sx={{
+        // py: 4,
+        // display: 'flex',
+        // flexDirection: 'column',
+        // alignItems: 'center',
+        // textAlign: 'center',
+        // marginLeft:'-589',
+        // marginTop:'-33px',
+        
+      }}
+      
+    >
+      <Box  
+        sx={{
+        padding:'400',
+        marginLeft:'-589',
+        marginTop:'-33px',
+        
+      }}
+      >
+      <Tables/></Box>
     </Box>
   );
 
+  const ToolbarActionsSearch = () => (
+    <Stack direction="row" alignItems="center">
+      <Tooltip title="Search" enterDelay={1000}>
+        <div>
+          <IconButton
+            type="button"
+            aria-label="search"
+            sx={{
+              display: { xs: 'inline', md: 'none' },
+            }}
+          >
+            <SearchIcon />
+          </IconButton>
+        </div>
+      </Tooltip>
+      <TextField
+        label="Search"
+        variant="outlined"
+        size="small"
+        slotProps={{
+          input: {
+            endAdornment: (
+              <IconButton type="button" aria-label="search" size="small">
+                <SearchIcon />
+              </IconButton>
+            ),
+            sx: { pr: 0.5 },
+          },
+        }}
+        sx={{ display: { xs: 'none', md: 'inline-block' }, mr: 1 }}
+      />
+      <ThemeSwitcher />
+      <Myprofile />
+    </Stack>
+  );
 
+  const SidebarFooter = ({ mini }: SidebarFooterProps) => (
+    <Typography variant="caption" sx={{ m: 1, whiteSpace: 'nowrap', overflow: 'hidden' }}>
+      {mini ? '© MUI' : `© ${new Date().getFullYear()} Made with love by MUI`}
+    </Typography>
+  );
+
+  const CustomAppTitle = () => (
+    <Stack direction="row" alignItems="center" spacing={2}>
+      <Typography variant="h6">Dashboard</Typography>
+    </Stack>
+  );
   return (
-    // <AppProvider session={session} navigation={NAVIGATION} theme={demoTheme}>
-      <DashboardLayout>
-        <AppBar position="sticky">
-          <Toolbar>
-            <Typography variant="h6" sx={{ flexGrow: 1 }}>User Dashboard</Typography>
-            {user && (
-              <>
-                <Button color="inherit" onClick={handleLogout} startIcon={<ExitToApp />}>Logout</Button>
-                <Button color="inherit">Profile</Button>
-              </>
-            )}
-          </Toolbar>
-        </AppBar>
-        <Container sx={{ flexGrow: 1, padding: 3 }}>
-          <DemoPageContent />
-        </Container>
+    <AppProvider
+      navigation={NAVIGATION}
+      theme={demoTheme}
+    >
+      <DashboardLayout
+        slots={{
+          appTitle: CustomAppTitle,
+          toolbarActions: ToolbarActionsSearch,
+          sidebarFooter: SidebarFooter,
+        }}
+      >
+        <DemoPageContent pathname="/dashboard" />
       </DashboardLayout>
-    // </AppProvider>
+    </AppProvider>
   );
 };
 export default MainPage;
-
-
-
-
-
-
-
-
-
-
-
 
 
 

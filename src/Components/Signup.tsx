@@ -62,17 +62,19 @@ export default function SignupCard() {
       email: data.email,
       password: data.password,
     });
-  
     
+   
+    localStorage.setItem('user', JSON.stringify(data));
+  
     setSnackbarMessage("Sign Up successful!");
     setSnackbarOpen(true);
-  
   
     setTimeout(() => {
       setOpen(false); 
       navigate("/login"); 
     }, 800); 
   };
+  
   
 
   return (

@@ -38,13 +38,13 @@ export default function Login() {
   };
   const onSubmit = (data: FormDatas) => {
     setLoaderState(true); 
-  
+    
     setTimeout(() => {
       if (user?.email === data.email && user?.password === data.password) {
         setSnackbarMessage("Login successful!"); 
         setSnackbarOpen(true); 
         
-        // Store user data in localStorage
+       
         localStorage.setItem('user', JSON.stringify(user));
   
         setTimeout(() => {
@@ -58,6 +58,7 @@ export default function Login() {
       }
     }, 2000); 
   };
+  
   
   return (
     <>
