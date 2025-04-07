@@ -1,65 +1,56 @@
-
-import { Card, TextField, Button, Box, Typography, InputAdornment, IconButton, Snackbar } from "@mui/material";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { Link, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import * as Yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useState } from "react";
-import { useUser } from "../ContextApi/UserContext";
-import SimpleBackdrop from "./Loader";
-import { FormDatas } from "../types/index";
-
+import React, { useState } from 'react';
+import { TextField, Button, Card, Box, Typography, InputAdornment, IconButton, Snackbar } from '@mui/material';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { useForm } from 'react-hook-form';
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '../ContextApi/UserContext';  
+import SimpleBackdrop from './Loader';  
+import { FormDatas } from '../types/index';
 const schema = Yup.object({
   email: Yup.string().email('Invalid email format').required('Email is required'),
   password: Yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
 });
-
-export default function Login() {
-  
+const Login = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<FormDatas>({
     resolver: yupResolver(schema),
     mode: 'onTouched',
   });
-
-  const { user } = useUser();
+  const { addUser } = useUser();  
   const navigate = useNavigate();
-
   const [showPassword, setShowPassword] = useState(false);
-  const [loaderState, setLoaderState] = useState(false); 
-  const [snackbarOpen, setSnackbarOpen] = useState(false); 
-  const [snackbarMessage, setSnackbarMessage] = useState(""); 
-
+  const [loaderState, setLoaderState] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-
   const handleCloseSnackbar = () => {
-    setSnackbarOpen(false); 
+    setSnackbarOpen(false);
   };
   const onSubmit = (data: FormDatas) => {
-    setLoaderState(true); 
-    
+    setLoaderState(true);
     setTimeout(() => {
-      if (user?.email === data.email && user?.password === data.password) {
-        setSnackbarMessage("Login successful!"); 
-        setSnackbarOpen(true); 
+      
+      const storedUsers = localStorage.getItem('users');
+      const users = storedUsers ? JSON.parse(storedUsers) : [];
+      const user = users.find((user: any) => user.email === data.email && user.password === data.password);
+      if (user) {
+        setSnackbarMessage("Login successful!");
+        setSnackbarOpen(true);
         
-       
-        localStorage.setItem('user', JSON.stringify(user));
-  
+        addUser(user);  
         setTimeout(() => {
-          setLoaderState(false); 
-          navigate("/mainpage"); 
-        }, 2000); 
+          setLoaderState(false);
+          navigate("/mainpage");
+        }, 2000);
       } else {
         setSnackbarMessage("Invalid credentials!");
-        setSnackbarOpen(true); 
-        setLoaderState(false); 
+        setSnackbarOpen(true);
+        setLoaderState(false);
       }
-    }, 2000); 
+    }, 2000);
   };
-  
-  
   return (
     <>
       <SimpleBackdrop loaderState={loaderState} setOpen={setLoaderState} />
@@ -96,40 +87,34 @@ export default function Login() {
                   ),
                 }}
               />
-              <Typography gutterBottom align="center">
               <Button
-              variant="contained"
-              fullWidth
-              sx={{
-                marginTop: 2,
-                background: "linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%)",
-                color: "white",
-                borderRadius: 2,
-                '&:hover': {
-                  background: "linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 35%, rgba(0,212,255,1) 100%)",
-                },
-              }}
-              type="submit"
-            >
-              Login
-            </Button>
-            <Link to='/'  className="text-blue-600 text-sm mt-3 hover:underline text-center" >
-        Create a new account | Sign in
-      </Link>
-      </Typography>
+                variant="contained"
+                fullWidth
+                sx={{
+                  marginTop: 2,
+                  background: "linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%)",
+                  color: "white",
+                  borderRadius: 2,
+                  '&:hover': {
+                    background: "linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 35%, rgba(0,212,255,1) 100%)",
+                  },
+                }}
+                type="submit"
+              >
+                Login
+              </Button>
             </form>
           </Card>
         </Box>
-
-      
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={2000}
-          onClose={handleCloseSnackbar}
-          message={snackbarMessage}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        />
       </Typography>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={2000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      />
     </>
   );
-}
+};
+export default Login;

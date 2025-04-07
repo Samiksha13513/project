@@ -6,31 +6,59 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
+import Modal from '@mui/material/Modal';
+import Fade from '@mui/material/Fade';
+import Backdrop from '@mui/material/Backdrop';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 
-
-
-
 export default function AccountMenu() {
-    const navigate= useNavigate();
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [openModal, setOpenModal] = React.useState(false);
   const open = Boolean(anchorEl);
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+
+  const handleCloseMenu = () => {
     setAnchorEl(null);
-    navigate('/')
   };
+
+  const handleProfileClick = () => {
+    setOpenModal(true);
+    handleCloseMenu();
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+  const user = {
+     name: "samiksha Yadav",
+    email: "samiksha@yadav.com",
+     
+     };
+
   return (
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-       
         <Tooltip title="Account settings">
           <IconButton
             onClick={handleClick}
@@ -40,16 +68,18 @@ export default function AccountMenu() {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar sx={{ width: 42, height: 42 }}>SY</Avatar>
+            <Avatar sx={{ width: 42, height: 42 }}>S</Avatar>
           </IconButton>
         </Tooltip>
       </Box>
+
+      {/* Menu */}
       <Menu
         anchorEl={anchorEl}
         id="account-menu"
         open={open}
-        onClose={handleClose}
-        onClick={handleClose}
+        onClose={handleCloseMenu}
+        onClick={handleCloseMenu}
         slotProps={{
           paper: {
             elevation: 0,
@@ -81,32 +111,65 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={handleClose}>
-          <Avatar /> Profile
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
+       
+        <MenuItem>
           <Avatar /> My account
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleProfileClick}>
+           <Avatar/> Profile
+        </MenuItem>
+        <MenuItem>
           <ListItemIcon>
             <PersonAdd fontSize="small" />
           </ListItemIcon>
           Add another account
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem>
           <ListItemIcon>
-            <Logout fontSize="small" />
+            <Logout onClick={handleCloseMenu} fontSize="small" />
           </ListItemIcon>
           Logout
         </MenuItem>
       </Menu>
+
+      {/* Modal */}
+      <Modal
+        aria-labelledby="spring-modal-title"
+        aria-describedby="spring-modal-description"
+        open={openModal}
+        onClose={handleCloseModal}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            TransitionComponent: Fade,
+          },
+        }}
+      >
+        <Fade in={openModal}>
+          <Box sx={style}>
+            <Typography id="spring-modal-title" variant="h6" component="h2">
+              User Profile
+            </Typography>
+            <Typography id="spring-modal-description" sx={{ mt: 2 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 2 }}>
+     <Typography variant="body1">Name :{user.name}</Typography>
+     <Typography variant="body1" color="textSecondary">Email :{user.email}</Typography>
+   </Box>
+            </Typography>
+            <Button onClick={handleCloseModal} sx={{ mt: 2 }}>
+              Close
+            </Button>
+          </Box>
+        </Fade>
+      </Modal>
     </React.Fragment>
   );
 }

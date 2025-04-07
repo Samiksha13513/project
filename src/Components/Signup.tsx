@@ -12,23 +12,20 @@ import { useState } from "react";
 import { useUser } from "../ContextApi/UserContext";
 import SimpleBackdrop from "./Loader";
 import {Link }from 'react-router-dom';
-
 export default function SignupCard() {
-  const { setUser } = useUser();
+  
+  const { addUser } = useUser();
   const navigate = useNavigate();
 
- 
   const validationSchema = Yup.object({
     name: Yup.string()
       .matches(/^[a-zA-Z]+$/, "Name must contain only letters.")
       .min(3, "Name must be at least  characters.")
       .required("Name is required"),
-  
     email: Yup.string()
       .email("Invalid email address")
       .matches(/^[a-zA-Z0-9._%+-]+@gmail\.com$/, "Email must be a valid Gmail address.")
       .required("Email is required"),
-  
     password: Yup.string()
       .min(6, "Password must be at least 6 characters")
       .matches(/[a-z]/, "Password must contain at least one lowercase letter.")
@@ -37,46 +34,48 @@ export default function SignupCard() {
       .matches(/[!@#$%^&*()_+={}\[\]:;"'<>,.?/-]/, "Password must contain at least one special character.")
       .required("Password is required"),
   });
-
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: yupResolver(validationSchema),
     mode: 'onTouched',
   });
-
   const [showPassword, setShowPassword] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [loaderState, setOpen] = useState(false); 
-
+  const [loaderState, setOpen] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-
   const handleCloseSnackbar = () => {
-    setSnackbarOpen(false); 
+    setSnackbarOpen(false);
   };
-
   const onSubmit = (data: FormData) => {
-    setOpen(true); 
+    setOpen(true);
   
-    setUser({
+  
+    const storedUsers :any[] = JSON.parse(localStorage.getItem('users') || '[]');
+    const userExists = storedUsers.some(user => user.email === data.email);
+    
+    if (userExists) {
+      setSnackbarMessage("This email is already registered!");
+      setSnackbarOpen(true);
+      setOpen(false);
+      return;
+    }
+    addUser({
       name: data.name,
       email: data.email,
       password: data.password,
     });
     
-   
-    localStorage.setItem('user', JSON.stringify(data));
-  
     setSnackbarMessage("Sign Up successful!");
     setSnackbarOpen(true);
   
+    localStorage.setItem('user', JSON.stringify(data));
+  
     setTimeout(() => {
-      setOpen(false); 
-      navigate("/login"); 
-    }, 800); 
+      setOpen(false);
+      navigate("/login");
+    }, 800);
   };
   
-  
-
   return (
     <>
       <SimpleBackdrop loaderState={loaderState} setOpen={setOpen} />
@@ -108,7 +107,6 @@ export default function SignupCard() {
             <Typography variant="h5" component="div" gutterBottom align="center">
               Sign In
             </Typography>
-
             <form onSubmit={handleSubmit(onSubmit)}>
               <TextField
                 label="Name"
@@ -120,7 +118,6 @@ export default function SignupCard() {
                 error={!!errors.name}
                 helperText={errors.name?.message}
               />
-
               <TextField
                 label="Email"
                 variant="outlined"
@@ -131,7 +128,6 @@ export default function SignupCard() {
                 error={!!errors.email}
                 helperText={errors.email?.message}
               />
-
               <TextField
                 label="Password"
                 variant="outlined"
@@ -177,12 +173,9 @@ export default function SignupCard() {
     Already Registered? | Login
   </Link>
 </Typography>
-
             </form>
           </Card>
         </Box>
-
-     
         <Snackbar
           open={snackbarOpen}
           autoHideDuration={2000}
