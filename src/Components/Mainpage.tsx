@@ -3,16 +3,15 @@ import * as React from "react";
 import { Box, Typography, Stack, IconButton, TextField, Tooltip } from "@mui/material";
 import { AppProvider, DashboardLayout, ThemeSwitcher } from "@toolpad/core";
  import { createTheme } from "@mui/material/styles";
-import { useContext } from "react";
-import { UserContext } from "../ContextApi/UserContext";
 import { useDemoRouter } from "@toolpad/core/internal";
 import Myprofile from './Myprofile';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';;
 import SearchIcon from '@mui/icons-material/Search';
-
+import { AccountCircle} from '@mui/icons-material';
+import Dashboard from "./Dashboard";
 import Table from "../Components/Table"; 
-
+import Profile from './Profile';
 
 const demoTheme = createTheme({
     cssVariables: {
@@ -50,7 +49,10 @@ function DemoPageContent({ pathname }: { pathname: string }) {
             }}
         >
             {pathname === "/dashboard" && (
-                <Typography variant="h5">Welcome to the Dashboard</Typography>
+                <div>
+                <Typography variant="h5"></Typography>
+                <Dashboard/>
+                </div>
             )}
             {pathname === "/users" && (
                 <div>
@@ -58,6 +60,12 @@ function DemoPageContent({ pathname }: { pathname: string }) {
                     <Table /> 
                 </div>
             )}
+            {pathname === "/profile" && (
+                <div>
+                    <Typography variant="h5" justifyContent={'center'}></Typography>
+                    <Profile/> 
+                </div>
+                 )}
         </Box>
     );
 }
@@ -100,6 +108,7 @@ const Mainpage = () => {
                 sx={{ display: { xs: 'none', md: 'inline-block' }, mr: 1 }}
             />
             <ThemeSwitcher/>
+
             <Myprofile />
              {/* Assuming Myprofile is a valid component */}
         </Stack>
@@ -119,7 +128,7 @@ const Mainpage = () => {
                
                     { segment: "dashboard", title: "Dashboard", icon: <DashboardIcon /> },
                     { segment: "users", title: "All Users", icon: <PeopleIcon /> },
-                 
+                    { segment: "profile", title: "Profile", icon: <AccountCircle/> },
             ]}
             
         >

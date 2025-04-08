@@ -1,4 +1,4 @@
-import { Card, TextField, Button, Box, Typography, Snackbar } from "@mui/material";
+import { Card, TextField, Button, Box, Typography, Snackbar, CircularProgress } from "@mui/material";
 import { FormData } from "../types/index";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -10,17 +10,16 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import { useState } from "react";
 import { useUser } from "../ContextApi/UserContext";
-import SimpleBackdrop from "./Loader";
-import {Link }from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
 export default function SignupCard() {
-  
   const { addUser } = useUser();
   const navigate = useNavigate();
 
   const validationSchema = Yup.object({
     name: Yup.string()
       .matches(/^[a-zA-Z]+$/, "Name must contain only letters.")
-      .min(3, "Name must be at least  characters.")
+      .min(3, "Name must be at least 3 characters.")
       .required("Name is required"),
     email: Yup.string()
       .email("Invalid email address")
@@ -34,51 +33,54 @@ export default function SignupCard() {
       .matches(/[!@#$%^&*()_+={}\[\]:;"'<>,.?/-]/, "Password must contain at least one special character.")
       .required("Password is required"),
   });
+
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: yupResolver(validationSchema),
     mode: 'onTouched',
   });
+
   const [showPassword, setShowPassword] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [loaderState, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false); // Track loading state for the button
+
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
+
   const onSubmit = (data: FormData) => {
-    setOpen(true);
+    setLoading(true); // Start loading when the submit button is clicked
   
-  
-    const storedUsers :any[] = JSON.parse(localStorage.getItem('users') || '[]');
+    const storedUsers: any[] = JSON.parse(localStorage.getItem('users') || '[]');
     const userExists = storedUsers.some(user => user.email === data.email);
     
     if (userExists) {
       setSnackbarMessage("This email is already registered!");
       setSnackbarOpen(true);
-      setOpen(false);
+      setLoading(false); // Stop loading
       return;
     }
+
     addUser({
       name: data.name,
       email: data.email,
       password: data.password,
     });
-    
+
     setSnackbarMessage("Sign Up successful!");
     setSnackbarOpen(true);
-  
+
     localStorage.setItem('user', JSON.stringify(data));
-  
+
     setTimeout(() => {
-      setOpen(false);
+      setLoading(false); // Stop loading
       navigate("/login");
-    }, 800);
+    }, 1500); // Adjust time as needed
   };
-  
+
   return (
     <>
-      <SimpleBackdrop loaderState={loaderState} setOpen={setOpen} />
       <Typography
         sx={{
           backgroundImage: 'url("https://cdn.dribbble.com/userupload/12426545/file/original-ffb3b267b3b794af825acf4978c4cd3d.jpg?resize=1024x768&vertical=center")',
@@ -152,27 +154,32 @@ export default function SignupCard() {
                   ),
                 }}
               />
-            <Typography gutterBottom align="center">
-  <Button
-    variant="contained"
-    fullWidth
-    sx={{
-      marginTop: 2,
-      background: "linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%)",
-      color: "white",
-      borderRadius: 2,
-      '&:hover': {
-        background: "linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 35%, rgba(0,212,255,1) 100%)",
-      },
-    }}
-    type="submit"
-  >
-    Sign in
-  </Button>
-  <Link to='/login' className="text-blue-600 text-sm mt-3 hover:underline text-center" >
-    Already Registered? | Login
-  </Link>
-</Typography>
+              <Typography gutterBottom align="center">
+                <Button
+                  variant="contained"
+                  fullWidth
+                  sx={{
+                    marginTop: 2,
+                    background: "linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%)",
+                    color: "white",
+                    borderRadius: 2,
+                    '&:hover': {
+                      background: "linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 35%, rgba(0,212,255,1) 100%)",
+                    },
+                  }}
+                  type="submit"
+                  disabled={loading} // Disable button while loading
+                >
+                  {loading ? (
+                    <CircularProgress size={24} sx={{ color: 'white' }} /> // Show loader
+                  ) : (
+                    "Sign in"
+                  )}
+                </Button>
+                <Link to='/login' className="text-blue-600 text-sm mt-3 hover:underline text-center">
+                  Already Registered? | Login
+                </Link>
+              </Typography>
             </form>
           </Card>
         </Box>

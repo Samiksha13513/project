@@ -1,118 +1,48 @@
-// import React from 'react';
-// import { Box, Typography, Avatar } from '@mui/material';
 
-// const Profile = () => {
- 
-//   const user = {
-//     name: "samiksha Yadav",
-//     email: "samiksha@yadav.com",
-//     avatar: "SY" 
-//   };
-
-//   return (
-//     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 2 }}>
-//       <Avatar sx={{ width: 100, height: 100, marginBottom: 2 }} src={user.avatar} />
-//       <Typography variant="h5">{user.name}</Typography>
-//       <Typography variant="body1" color="textSecondary">{user.email}</Typography>
-//     </Box>
-//   );
-// };
-
-// export default Profile;
-import * as React from 'react';
-import Backdrop from '@mui/material/Backdrop';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import { useSpring, animated } from '@react-spring/web';
-
-interface FadeProps {
-  children: React.ReactElement<any>;
-  in?: boolean;
-  onClick?: any;
-  onEnter?: (node: HTMLElement, isAppearing: boolean) => void;
-  onExited?: (node: HTMLElement, isAppearing: boolean) => void;
-  ownerState?: any;
-}
-
-const Fade = React.forwardRef<HTMLDivElement, FadeProps>(function Fade(props, ref) {
-  const {
-    children,
-    in: open,
-    onClick,
-    onEnter,
-    onExited,
-    ownerState,
-    ...other
-  } = props;
-  const style = useSpring({
-    from: { opacity: 0 },
-    to: { opacity: open ? 1 : 0 },
-    onStart: () => {
-      if (open && onEnter) {
-        onEnter(null as any, true);
-      }
-    },
-    onRest: () => {
-      if (!open && onExited) {
-        onExited(null as any, true);
-      }
-    },
-  });
-
+import { Box, Typography, Avatar, Button, Card, CardContent, Divider, Grid, } from '@mui/material';
+const user = {
+  name: "Samiksha Yadav",
+  email: "samiksha66@yadav.com",
+  phone: "+9123 456 7890",
+  address: "Mhow",
+  avatar: "SY", 
+};
+const Profile = () => {
   return (
-    // @ts-expect-error https://github.com/pmndrs/react-spring/issues/2341
-    <animated.div ref={ref} style={style} {...other}>
-      {React.cloneElement(children, { onClick })}
-    </animated.div>
-  );
-});
+    <Box sx={{ padding: 4, display: 'flex', justifyContent: 'center' }}>
+      <Card sx={{ width: 400, boxShadow: 3 }}>
+        <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Avatar sx={{ width: 120, height: 120, fontSize: '3rem', bgcolor: 'primary.main', marginBottom: 2 }}>
+            {user.avatar}
+          </Avatar>
+          <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{user.name}</Typography>
+          <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 2 }}>
+            {user.email}
+          </Typography>
+          <Divider sx={{ width: '100%', marginBottom: 2 }} />
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>Phone</Typography>
+              <Typography variant="body2" color="textSecondary">{user.phone}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>Address</Typography>
+              <Typography variant="body2" color="textSecondary">{user.address}</Typography>
+            </Grid>
+          </Grid>
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
+          <Box sx={{ marginTop: 3, width: '100%', display: 'flex', justifyContent: 'center' }}>
+            <Button variant="contained" color="primary" sx={{ marginRight: 2 }}>
+              Edit Profile
+            </Button>
+            <Button variant="outlined" color="secondary">
+              Logout
+            </Button>
+          </Box>
+        </CardContent>
+      </Card>
+    </Box>
+  );
 };
 
-export default function SpringModal() {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  return (
-    <div>
-      <Button onClick={handleOpen}>Profile</Button>
-      <Modal
-        aria-labelledby="spring-modal-title"
-        aria-describedby="spring-modal-description"
-        open={open}
-        onClose={handleClose}
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{
-          backdrop: {
-            TransitionComponent: Fade,
-          },
-        }}
-      >
-        <Fade in={open}>
-          <Box sx={style}>
-            <Typography id="spring-modal-title" variant="h6" component="h2">
-            User
-            </Typography>
-            <Typography id="spring-modal-description" sx={{ mt: 2 }}>
-              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-            </Typography>
-          </Box>
-        </Fade>
-      </Modal>
-    </div>
-  );
-}
+export default Profile;

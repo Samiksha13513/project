@@ -41,10 +41,8 @@ export default function AccountMenu() {
   };
 
   const handleLogout = () => {
-    // Add any logout logic here (e.g., clear session or token)
-    // Navigate to the Signup page
-    navigate('/'); // This redirects to the Signup page
-    handleCloseMenu(); // Close the account menu after logout
+    navigate('/'); 
+    handleCloseMenu(); 
   };
 
   const style = {

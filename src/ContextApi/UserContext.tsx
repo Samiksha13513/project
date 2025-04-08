@@ -15,16 +15,16 @@ interface UserProviderProps {
 }
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [users, setUsers] = useState<User[]>([]);
-  // Sync with localStorage on initial mount (only once)
+
   useEffect(() => {
     const storedUsers = localStorage.getItem('users');
     if (storedUsers) {
       setUsers(JSON.parse(storedUsers));
     }
-  }, []);  // Empty dependency array ensures this runs only once on mount.
-  // Add a new user to the list
+  }, []);  
+  
   const addUser = (user: User) => {
-    // Check if user already exists based on email
+   
     const userExists = users.some(existingUser => existingUser.email === user.email);
     if (!userExists) {
       const updatedUsers = [...users, user];
@@ -33,10 +33,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     }
   };
   const deleteUser = (email: string) => {
-    // Filter the users array, keeping only those whose email doesn't match the one to be deleted
+   
     const updatedUsers = users.filter(user => user.email !== email); 
-    setUsers(updatedUsers); // Update the state
-    localStorage.setItem('users', JSON.stringify(updatedUsers)); // Save the updated list to localStorage
+    setUsers(updatedUsers); 
+    localStorage.setItem('users', JSON.stringify(updatedUsers)); 
   };
   
 

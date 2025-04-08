@@ -21,11 +21,10 @@ const Tables = () => {
   };
 
   const handleDelete = (email: string) => {
-    // Call the deleteUser function to delete the user
+   
     deleteUser(email);
   
-    // After deletion, show the alert
-    alert('Delete permanently');
+    alert('Are You sure ?');
   };
   
   
