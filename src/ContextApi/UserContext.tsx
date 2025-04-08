@@ -6,7 +6,7 @@ interface User {
 }
 interface UserContextType {
   users: User[];  // Now managing an array of users
-  addUser: (user: User) => void;
+  addUser: (email: User) => void;
   deleteUser: (email: string) => void;
 }
  export const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -32,13 +32,14 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       localStorage.setItem('users', JSON.stringify(updatedUsers));
     }
   };
-  
-  // Delete a user by email
   const deleteUser = (email: string) => {
-    const updatedUsers = users.filter((user) => user.email !== email);
-    setUsers(updatedUsers);
-    localStorage.setItem('users', JSON.stringify(updatedUsers));
+    // Filter the users array, keeping only those whose email doesn't match the one to be deleted
+    const updatedUsers = users.filter(user => user.email !== email); 
+    setUsers(updatedUsers); // Update the state
+    localStorage.setItem('users', JSON.stringify(updatedUsers)); // Save the updated list to localStorage
   };
+  
+
   return (
     <UserContext.Provider value={{ users, addUser, deleteUser }}>
       {children}

@@ -18,7 +18,7 @@ import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 
 export default function AccountMenu() {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook to navigate programmatically
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [openModal, setOpenModal] = React.useState(false);
   const open = Boolean(anchorEl);
@@ -40,6 +40,13 @@ export default function AccountMenu() {
     setOpenModal(false);
   };
 
+  const handleLogout = () => {
+    // Add any logout logic here (e.g., clear session or token)
+    // Navigate to the Signup page
+    navigate('/'); // This redirects to the Signup page
+    handleCloseMenu(); // Close the account menu after logout
+  };
+
   const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -49,15 +56,17 @@ export default function AccountMenu() {
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
+    borderRadius: 2,
   };
+
   const user = {
-     name: "samiksha Yadav",
+    name: "Samiksha Yadav",
     email: "samiksha@yadav.com",
-     
-     };
+  };
 
   return (
     <React.Fragment>
+      {/* Avatar Icon Button */}
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         <Tooltip title="Account settings">
           <IconButton
@@ -73,7 +82,7 @@ export default function AccountMenu() {
         </Tooltip>
       </Box>
 
-      {/* Menu */}
+      {/* Account Menu */}
       <Menu
         anchorEl={anchorEl}
         id="account-menu"
@@ -111,13 +120,12 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-       
         <MenuItem>
           <Avatar /> My account
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleProfileClick}>
-           <Avatar/> Profile
+          <Avatar /> Profile
         </MenuItem>
         <MenuItem>
           <ListItemIcon>
@@ -131,15 +139,15 @@ export default function AccountMenu() {
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={handleLogout}>
           <ListItemIcon>
-            <Logout onClick={handleCloseMenu} fontSize="small" />
+            <Logout fontSize="small" />
           </ListItemIcon>
           Logout
         </MenuItem>
       </Menu>
 
-      {/* Modal */}
+      {/* Profile Modal */}
       <Modal
         aria-labelledby="spring-modal-title"
         aria-describedby="spring-modal-description"
@@ -155,16 +163,15 @@ export default function AccountMenu() {
       >
         <Fade in={openModal}>
           <Box sx={style}>
-            <Typography id="spring-modal-title" variant="h6" component="h2">
+            <Typography id="spring-modal-title" variant="h6" component="h2" align="center">
               User Profile
             </Typography>
-            <Typography id="spring-modal-description" sx={{ mt: 2 }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 2 }}>
-     <Typography variant="body1">Name :{user.name}</Typography>
-     <Typography variant="body1" color="textSecondary">Email :{user.email}</Typography>
-   </Box>
-            </Typography>
-            <Button onClick={handleCloseModal} sx={{ mt: 2 }}>
+              <Avatar sx={{ width: 100, height: 100, mb: 2 }}>S</Avatar>
+              <Typography variant="body1">Name: {user.name}</Typography>
+              <Typography variant="body1" color="textSecondary">Email: {user.email}</Typography>
+            </Box>
+            <Button onClick={handleCloseModal} variant="contained" sx={{ mt: 2, width: '100%' }}>
               Close
             </Button>
           </Box>

@@ -25,8 +25,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
- import { useSpring, animated } from '@react-spring/web';
- import { Avatar } from '@mui/material';
+import { useSpring, animated } from '@react-spring/web';
 
 interface FadeProps {
   children: React.ReactElement<any>;
@@ -36,13 +35,6 @@ interface FadeProps {
   onExited?: (node: HTMLElement, isAppearing: boolean) => void;
   ownerState?: any;
 }
-const user = {
-
-    name: "samiksha Yadav",
-         email: "samiksha@yadav.com",
-         avatar: "SY" 
-    
-};
 
 const Fade = React.forwardRef<HTMLDivElement, FadeProps>(function Fade(props, ref) {
   const {
@@ -70,7 +62,7 @@ const Fade = React.forwardRef<HTMLDivElement, FadeProps>(function Fade(props, re
   });
 
   return (
-   
+    // @ts-expect-error https://github.com/pmndrs/react-spring/issues/2341
     <animated.div ref={ref} style={style} {...other}>
       {React.cloneElement(children, { onClick })}
     </animated.div>
@@ -96,7 +88,7 @@ export default function SpringModal() {
 
   return (
     <div>
-      <Button onClick={handleOpen}>profile</Button>
+      <Button onClick={handleOpen}>Profile</Button>
       <Modal
         aria-labelledby="spring-modal-title"
         aria-describedby="spring-modal-description"
@@ -111,11 +103,14 @@ export default function SpringModal() {
         }}
       >
         <Fade in={open}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 2 }}>
-//       <Avatar sx={{ width: 100, height: 100, marginBottom: 2 }} src={user.avatar} />
-//       <Typography variant="h5">{user.name}</Typography>
-//       <Typography variant="body1" color="textSecondary">{user.email}</Typography>
-//     </Box>
+          <Box sx={style}>
+            <Typography id="spring-modal-title" variant="h6" component="h2">
+            User
+            </Typography>
+            <Typography id="spring-modal-description" sx={{ mt: 2 }}>
+              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+            </Typography>
+          </Box>
         </Fade>
       </Modal>
     </div>

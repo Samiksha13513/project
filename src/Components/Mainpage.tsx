@@ -1,16 +1,18 @@
 
 import * as React from "react";
 import { Box, Typography, Stack, IconButton, TextField, Tooltip } from "@mui/material";
-import { AppProvider, DashboardLayout } from "@toolpad/core";
-import { createTheme } from "@mui/material/styles";
+import { AppProvider, DashboardLayout, ThemeSwitcher } from "@toolpad/core";
+ import { createTheme } from "@mui/material/styles";
 import { useContext } from "react";
 import { UserContext } from "../ContextApi/UserContext";
 import { useDemoRouter } from "@toolpad/core/internal";
 import Myprofile from './Myprofile';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import PeopleIcon from '@mui/icons-material/People';;
 import SearchIcon from '@mui/icons-material/Search';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
+
 import Table from "../Components/Table"; 
+
 
 const demoTheme = createTheme({
     cssVariables: {
@@ -30,12 +32,13 @@ const demoTheme = createTheme({
 
 const CustomAppTitle = () => (
     <Box>
-        <Typography variant="h4">Dashboard</Typography>
+        <Typography variant="h5">Dashboard</Typography>
     </Box>
 );
 
 function DemoPageContent({ pathname }: { pathname: string }) {
     return (
+
         <Box
             sx={{
                 py: 4,
@@ -51,7 +54,7 @@ function DemoPageContent({ pathname }: { pathname: string }) {
             )}
             {pathname === "/users" && (
                 <div>
-                    <Typography variant="h5"></Typography>
+                    <Typography variant="h5" justifyContent={'center'}></Typography>
                     <Table /> 
                 </div>
             )}
@@ -60,7 +63,7 @@ function DemoPageContent({ pathname }: { pathname: string }) {
 }
 
 const Mainpage = () => {
-    const { user } = useContext(UserContext);
+   
     const router = useDemoRouter("/dashboard");
 
     const ToolbarActionsSearch = () => (
@@ -75,6 +78,8 @@ const Mainpage = () => {
                         }}
                     >
                         <SearchIcon />
+
+
                     </IconButton>
                 </div>
             </Tooltip>
@@ -94,7 +99,9 @@ const Mainpage = () => {
                 }}
                 sx={{ display: { xs: 'none', md: 'inline-block' }, mr: 1 }}
             />
-            <Myprofile /> {/* Assuming Myprofile is a valid component */}
+            <ThemeSwitcher/>
+            <Myprofile />
+             {/* Assuming Myprofile is a valid component */}
         </Stack>
     );
 
@@ -106,12 +113,15 @@ const Mainpage = () => {
 
     return (
         <AppProvider
+        router={router}
+        theme={demoTheme}
             navigation={[
-                { segment: "dashboard", title: "Dashboard" },
-                { segment: "users", title: " All Users" },
+               
+                    { segment: "dashboard", title: "Dashboard", icon: <DashboardIcon /> },
+                    { segment: "users", title: "All Users", icon: <PeopleIcon /> },
+                 
             ]}
-            router={router}
-            theme={demoTheme}
+            
         >
             <DashboardLayout
                 slots={{
