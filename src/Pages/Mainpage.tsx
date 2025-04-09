@@ -3,14 +3,14 @@ import { Box, Typography, Stack, IconButton, TextField, Tooltip } from "@mui/mat
 import { AppProvider, DashboardLayout, ThemeSwitcher } from "@toolpad/core";
  import { createTheme } from "@mui/material/styles";
 import { useDemoRouter } from "@toolpad/core/internal";
-import Myprofile from './Myprofile';
+import Myprofile from '../Components/Myprofile';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';;
 
 import { AccountCircle} from '@mui/icons-material';
 import Dashboard from "./Dashboard";
 import Table from "../Components/Table"; 
-import Profile from './Profile';
+import Profile from '../Components/Profile';
 
 const demoTheme = createTheme({
     cssVariables: {
@@ -75,7 +75,7 @@ const Mainpage = () => {
              <ThemeSwitcher/>
 
             <Myprofile />
-             {/* Assuming Myprofile is a valid component */}
+          
         </Stack>
     
     )
