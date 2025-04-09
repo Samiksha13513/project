@@ -1,5 +1,4 @@
 
-import * as React from "react";
 import { Box, Typography, Stack, IconButton, TextField, Tooltip } from "@mui/material";
 import { AppProvider, DashboardLayout, ThemeSwitcher } from "@toolpad/core";
  import { createTheme } from "@mui/material/styles";
@@ -7,7 +6,7 @@ import { useDemoRouter } from "@toolpad/core/internal";
 import Myprofile from './Myprofile';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';;
-import SearchIcon from '@mui/icons-material/Search';
+
 import { AccountCircle} from '@mui/icons-material';
 import Dashboard from "./Dashboard";
 import Table from "../Components/Table"; 
@@ -40,12 +39,8 @@ function DemoPageContent({ pathname }: { pathname: string }) {
 
         <Box
             sx={{
-                py: 4,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                textAlign: "center",
-                marginRight: '420px', 
+                 py: 4,
+                width:'100%',
             }}
         >
             {pathname === "/dashboard" && (
@@ -75,44 +70,15 @@ const Mainpage = () => {
     const router = useDemoRouter("/dashboard");
 
     const ToolbarActionsSearch = () => (
-        <Stack direction="row" alignItems="center">
-            <Tooltip title="Search" enterDelay={1000}>
-                <div>
-                    <IconButton
-                        type="button"
-                        aria-label="search"
-                        sx={{
-                            display: { xs: 'inline', md: 'none' },
-                        }}
-                    >
-                        <SearchIcon />
-
-
-                    </IconButton>
-                </div>
-            </Tooltip>
-            <TextField
-                label="Search"
-                variant="outlined"
-                size="small"
-                slotProps={{
-                    input: {
-                        endAdornment: (
-                            <IconButton type="button" aria-label="search" size="small">
-                                <SearchIcon />
-                            </IconButton>
-                        ),
-                        sx: { pr: 0.5 },
-                    },
-                }}
-                sx={{ display: { xs: 'none', md: 'inline-block' }, mr: 1 }}
-            />
-            <ThemeSwitcher/>
+         <Stack direction="row" alignItems="center">
+            
+             <ThemeSwitcher/>
 
             <Myprofile />
              {/* Assuming Myprofile is a valid component */}
         </Stack>
-    );
+    
+    )
 
     const SidebarFooter = ({ mini }: { mini: boolean }) => (
         <Typography variant="caption" sx={{ m: 1, whiteSpace: 'nowrap', overflow: 'hidden' }}>
@@ -126,8 +92,8 @@ const Mainpage = () => {
         theme={demoTheme}
             navigation={[
                
-                    { segment: "dashboard", title: "Dashboard", icon: <DashboardIcon /> },
-                    { segment: "users", title: "All Users", icon: <PeopleIcon /> },
+                    { segment: "dashboard", title: "OverView", icon: <DashboardIcon /> },
+                    { segment: "users", title: "Customers", icon: <PeopleIcon /> },
                     { segment: "profile", title: "Profile", icon: <AccountCircle/> },
             ]}
             

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Box, IconButton, Typography, Modal, TablePagination, Paper } from '@mui/material';
-import { Visibility, Delete, Close } from '@mui/icons-material';
+import { Table, TableBody, TableCell, TableHead, TableRow, Box, IconButton, Typography, Modal, TablePagination, Paper, TextField, InputAdornment, Checkbox, TableSortLabel, Button } from '@mui/material';
+import { Visibility, Delete, Close, Search } from '@mui/icons-material';
 import { useUser } from '../ContextApi/UserContext';
 
 const Tables = () => {
@@ -9,25 +9,24 @@ const Tables = () => {
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
+  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+  const [orderBy, setOrderBy] = useState<string>('name');
 
   const handleOpen = (user: any) => {
     setSelectedUser(user);
     setOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
     setSelectedUser(null);
   };
 
   const handleDelete = (email: string) => {
-   
     deleteUser(email);
-  
-    alert('Are You sure ?');
+    alert('Are You sure?');
   };
-  
-  
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage);
@@ -38,38 +37,111 @@ const Tables = () => {
     setPage(0);
   };
 
+  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      const allEmails = users.map(user => user.email);
+      setSelectedUsers(new Set(allEmails));
+    } else {
+      setSelectedUsers(new Set());
+    }
+  };
+
+  const handleSelectUser = (event: React.ChangeEvent<HTMLInputElement>, email: string) => {
+    const newSelectedUsers = new Set(selectedUsers);
+    if (event.target.checked) {
+      newSelectedUsers.add(email);
+    } else {
+      newSelectedUsers.delete(email);
+    }
+    setSelectedUsers(newSelectedUsers);
+  };
+
+  const handleSort = (property: string) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
+  const filteredUsers = users.filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase()));
+
+  const sortedUsers = filteredUsers.sort((a, b) => {
+    if (orderBy === 'name') {
+      return order === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+    }
+    return 0; 
+  });
+
   return (
-    <Box
-      sx={{
-        py: 4,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        textAlign: 'center',
-        width: '100%',
-      }}
-    >
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <TableContainer>
-          <Table>
+    <Box sx={{flexDirection: 'column', alignItems: 'center', textAlign: 'center', width: '100%' }}>
+      <Paper sx={{ width: '100%', }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: 2 }}>
+          {/* Search Bar */}
+          <TextField
+            label="Search"
+            variant="outlined"
+            size="small"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Search />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          {/* Add Customer Button */}
+          <Button variant="contained" color="primary">Add Customer</Button>
+        </Box>
+
+        {/* Table with checkboxes */}
+        {/* <TableContainer> */}
+        <Table sx={{ width: '100%' }}>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
+                <TableCell padding="checkbox" width='100%'>
+                  <Checkbox
+                    checked={selectedUsers.size === users.length}
+                    onChange={handleSelectAll}
+                    inputProps={{
+                      'aria-label': 'select all users',
+                    }}
+                  />
+                </TableCell>
+                <TableCell>
+                  <TableSortLabel
+                    active={orderBy === 'name'}
+                    direction={orderBy === 'name' ? order : 'asc'}
+                    onClick={() => handleSort('name')}
+                  >
+                    Name
+                  </TableSortLabel>
+                </TableCell>
                 <TableCell>Email</TableCell>
                 <TableCell>Password</TableCell>
                 <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.length === 0 ? (
+              {sortedUsers.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4}>No users available</TableCell>
+                  <TableCell colSpan={5}>No users available</TableCell>
                 </TableRow>
               ) : (
-                users
+                sortedUsers
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((user: any) => (
                     <TableRow key={user.id}>
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          checked={selectedUsers.has(user.email)}
+                          onChange={(e) => handleSelectUser(e, user.email)}
+                          inputProps={{
+                            'aria-labelledby': user.name,
+                          }}
+                        />
+                      </TableCell>
                       <TableCell>{user.name}</TableCell>
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.password}</TableCell>
@@ -86,13 +158,13 @@ const Tables = () => {
               )}
             </TableBody>
           </Table>
-        </TableContainer>
-        
+        {/* </TableContainer> */}
+
         {/* Pagination */}
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={users.length}
+          count={filteredUsers.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
