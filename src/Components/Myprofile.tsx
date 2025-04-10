@@ -18,7 +18,7 @@ import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 
 export default function AccountMenu() {
-  const navigate = useNavigate(); // Hook to navigate programmatically
+  const navigate = useNavigate(); 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [openModal, setOpenModal] = React.useState(false);
   const open = Boolean(anchorEl);
@@ -44,7 +44,7 @@ export default function AccountMenu() {
     navigate('/'); 
     handleCloseMenu(); 
   };
-
+                  
   const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -64,7 +64,7 @@ export default function AccountMenu() {
 
   return (
     <React.Fragment>
-      {/* Avatar Icon Button */}
+    
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         <Tooltip title="Account settings">
           <IconButton
@@ -80,7 +80,7 @@ export default function AccountMenu() {
         </Tooltip>
       </Box>
 
-      {/* Account Menu */}
+     
       <Menu
         anchorEl={anchorEl}
         id="account-menu"
@@ -145,7 +145,7 @@ export default function AccountMenu() {
         </MenuItem>
       </Menu>
 
-      {/* Profile Modal */}
+   
       <Modal
         aria-labelledby="spring-modal-title"
         aria-describedby="spring-modal-description"

@@ -32,7 +32,10 @@ const BarChart = () => {
   };
 
   return (
-    <Box>
+     <Box sx={{
+         height:'400px',
+         width:'300px'
+        }}>
       <Bar data={data} options={options} />
     </Box>
   );

@@ -71,11 +71,34 @@ const Tables = () => {
     return 0; 
   });
 
+  const [addModalOpen, setAddModalOpen] = useState(false);
+const [newCustomer, setNewCustomer] = useState({
+  name: '',
+  email: '',
+  password: ''
+});
+
+const handleAddCustomerOpen = () => setAddModalOpen(true);
+const handleAddCustomerClose = () => {
+  setAddModalOpen(false);
+  setNewCustomer({ name: '', email: '', password: '' });
+};
+
+const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const { name, value } = e.target;
+  setNewCustomer(prev => ({ ...prev, [name]: value }));
+};
+
+const handleAddCustomer = () => {
+  console.log('Customer to Add:', newCustomer);
+ 
+  handleAddCustomerClose();
+};
   return (
     <Box sx={{flexDirection: 'column', alignItems: 'center', textAlign: 'center', width: '100%' }}>
       <Paper sx={{ width: '100%', }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: 2 }}>
-          {/* Search Bar */}
+      
           <TextField
             label="Search"
             variant="outlined"
@@ -91,14 +114,26 @@ const Tables = () => {
             }}
           />
 
-          {/* Add Customer Button */}
-          <Button variant="contained" color="primary">Add Customer</Button>
+
+                                                                                                                                
+
+       
+          <Button variant="contained" color="primary" onClick={handleAddCustomerOpen} sx={{
+            background: "linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%)",
+            '&:hover': {
+                      background: "linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 35%, rgba(0,212,255,1) 100%)",
+                    },
+          }}>
+  Add Customer
+</Button>
         </Box>
 
-        {/* Table with checkboxes */}
-        {/* <TableContainer> */}
-        <Table sx={{ width: '100%' }}>
-            <TableHead>
+      
+        <Table sx={{ width: '100%' ,}}>
+            <TableHead  sx={{
+             borderRadius:'5px',
+                  background: "#F0F8FF",
+            }}>
               <TableRow>
                 <TableCell padding="checkbox" width='100%'>
                   <Checkbox
@@ -207,6 +242,68 @@ const Tables = () => {
               </Typography>
             </>
           )}
+        </Box>
+      </Modal>
+      <Modal
+        open={addModalOpen}
+        onClose={handleAddCustomerClose}
+        aria-labelledby="add-customer-title"
+      >
+        <Box sx={modalStyle}>
+          <IconButton
+            onClick={handleAddCustomerClose}
+            sx={{
+              position: 'absolute',
+              top: 8,
+              right: 8,
+              color: 'grey.500',
+            }}
+          >
+            <Close />
+          </IconButton>
+          <Typography id="add-customer-title" variant="h6" component="h2" align="center" gutterBottom>
+            Add New Customer
+          </Typography>
+          <TextField
+            fullWidth
+            label="Name"
+            name="name"
+            value={newCustomer.name}
+            onChange={handleInputChange}
+            margin="normal"
+          />
+          <TextField
+            fullWidth
+            label="Email"
+            name="email"
+            value={newCustomer.email}
+            onChange={handleInputChange}
+            margin="normal"
+          />
+          <TextField
+            fullWidth
+            label="Password"
+            name="password"
+            type="password"
+            value={newCustomer.password}
+            onChange={handleInputChange}
+            margin="normal"
+          />
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+        
+            onClick={handleAddCustomer}
+            sx={{
+              background: "linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,1) 35%, rgba(0,212,255,1) 100%)",
+              '&:hover': {
+                        background: "linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 35%, rgba(0,212,255,1) 100%)",
+                      },mt: 2
+            }}>
+          
+            Add Customer
+          </Button>
         </Box>
       </Modal>
     </Box>

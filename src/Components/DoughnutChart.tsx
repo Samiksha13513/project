@@ -23,7 +23,10 @@ const DoughnutChart = () => {
   };
 
   return (
-    <Box>
+   <Box sx={{
+        height:'400px',
+        width:'300px'
+       }}>
       <Doughnut data={data} options={options} />
     </Box>
   );
