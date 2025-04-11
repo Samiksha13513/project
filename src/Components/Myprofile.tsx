@@ -100,6 +100,7 @@ export default function AccountMenu() {
                 bgcolor: 'background.paper',
                 transform: 'translateY(-50%) rotate(45deg)',
                 zIndex: 0,
+                boxShadow:'inherit',
               },
             },
           },
@@ -117,12 +118,12 @@ export default function AccountMenu() {
           </ListItemIcon>
           Add another account
         </MenuItem>
-        {/* <MenuItem>
+        <MenuItem>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
           Settings
-        </MenuItem> */}
+        </MenuItem>
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
