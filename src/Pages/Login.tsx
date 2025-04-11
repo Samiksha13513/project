@@ -8,6 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../ContextApi/UserContext';  
 import { FormDatas } from '../types/index';
+import { Link } from 'react-router-dom';
 
 const schema = Yup.object({
   email: Yup.string().email('Invalid email format').required('Email is required'),
@@ -20,7 +21,8 @@ const Login = () => {
     mode: 'onTouched',
   });
   
-  const { addUser } = useUser();  
+  const { loginUser } = useUser(); 
+
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -42,7 +44,7 @@ const Login = () => {
       if (user) {
         setSnackbarMessage("Login successful!");
         setSnackbarOpen(true);
-        addUser(user);
+        loginUser(user); 
         setTimeout(() => {
           setLoaderState(false);
           navigate("/mainpage");
@@ -111,6 +113,9 @@ const Login = () => {
                   'Login'
                 )}
               </Button>
+              <Link to='/' className="text-blue-600 text-sm mt-3 hover:underline text-center" style={{ marginBottom: '16px' }}>  New user| Sign in
+</Link>
+
             </form>
           </Card>
         </Box>

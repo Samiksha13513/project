@@ -1,44 +1,36 @@
-import React from 'react';
-import { Bar } from 'react-chartjs-2';
+import { Radar } from 'react-chartjs-2';
 import { Box } from '@mui/material';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import {
+  Chart as ChartJS,
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  Filler,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
-const BarChart = () => {
+const RadarChart = () => {
   const data = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    labels: ['Login', 'Profile Update', 'Post', 'Comment', 'Like', 'Share'],
     datasets: [
       {
-        label: 'Sales by Month',
-        data: [65, 59, 80, 81, 56, 55, 40],
-        backgroundColor: 'rgba(75,192,192,0.2)',
-        borderColor: 'rgba(75,192,192,1)',
-        borderWidth: 1,
+        label: 'User Activity Score',
+        data: [65, 59, 90, 81, 56, 55],
+        backgroundColor: 'rgba(135,206,250,0.3)',
+        borderColor: 'rgba(135,206,250,1)',
+        pointBackgroundColor: 'rgba(135,206,250,1)',
       },
     ],
   };
 
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      tooltip: {
-        enabled: true,
-      },
-    },
-  };
-
   return (
-     <Box sx={{
-         height:'400px',
-         width:'300px'
-        }}>
-      <Bar data={data} options={options} />
+    <Box sx={{ width: 400, height: 290, m: 2 }}>
+      <Radar data={data} />
     </Box>
   );
 };
 
-export default BarChart;
+export default RadarChart;

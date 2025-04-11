@@ -42,15 +42,14 @@ export default function SignupCard() {
   const [showPassword, setShowPassword] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [loading, setLoading] = useState(false); // Track loading state for the button
-
+  const [loading, setLoading] = useState(false); 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
 
   const onSubmit = (data: FormData) => {
-    setLoading(true); // Start loading when the submit button is clicked
+    setLoading(true); 
   
     const storedUsers: any[] = JSON.parse(localStorage.getItem('users') || '[]');
     const userExists = storedUsers.some(user => user.email === data.email);
@@ -58,7 +57,7 @@ export default function SignupCard() {
     if (userExists) {
       setSnackbarMessage("This email is already registered!");
       setSnackbarOpen(true);
-      setLoading(false); // Stop loading
+      setLoading(false); 
       return;
     }
 
@@ -74,9 +73,9 @@ export default function SignupCard() {
     localStorage.setItem('user', JSON.stringify(data));
 
     setTimeout(() => {
-      setLoading(false); // Stop loading
+      setLoading(false);
       navigate("/login");
-    }, 1500); // Adjust time as needed
+    }, 1500); 
   };
 
   return (
@@ -168,10 +167,10 @@ export default function SignupCard() {
                     },
                   }}
                   type="submit"
-                  disabled={loading} // Disable button while loading
+                  disabled={loading}
                 >
                   {loading ? (
-                    <CircularProgress size={24} sx={{ color: 'white' }} /> // Show loader
+                    <CircularProgress size={24} sx={{ color: 'white' }} /> 
                   ) : (
                     "Sign in"
                   )}

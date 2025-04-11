@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { Table, TableBody, TableCell, TableHead, TableRow, Box, IconButton, Typography, Modal, TablePagination, Paper, TextField, InputAdornment, Checkbox, TableSortLabel, Button } from '@mui/material';
+import {
+  Table, TableBody, TableCell, TableHead, TableRow, Box, IconButton,
+  Typography, Modal, TablePagination, Paper, TextField, InputAdornment,
+  Checkbox, TableSortLabel, Button, Switch
+} from '@mui/material';
 import { Visibility, Delete, Close, Search } from '@mui/icons-material';
 import { useUser } from '../ContextApi/UserContext';
 
 const Tables = () => {
-  const { users, deleteUser } = useUser();
+  const { users, deleteUser, updateUserStatus, addUser, currentUser } = useUser();
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(0);
@@ -13,47 +17,40 @@ const Tables = () => {
   const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = useState<string>('name');
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [newCustomer, setNewCustomer] = useState({ name: '', email: '', password: '' });
+
+  const filteredUsers = users
+    .filter(user => user.email !== currentUser?.email)
+    .filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    .sort((a, b) => {
+      if (orderBy === 'name') {
+        return order === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+      }
+      return 0;
+    });
 
   const handleOpen = (user: any) => {
     setSelectedUser(user);
     setOpen(true);
   };
+
   const handleClose = () => {
     setOpen(false);
     setSelectedUser(null);
   };
 
   const handleDelete = (email: string) => {
-    deleteUser(email);
-    alert('Are You sure?');
+    if (window.confirm('Are you sure you want to delete this user?')) {
+      deleteUser(email);
+    }
   };
 
-  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-    setPage(newPage);
-  };
+  const handleChangePage = (_: any, newPage: number) => setPage(newPage);
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+  const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(e.target.value, 10));
     setPage(0);
-  };
-
-  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const allEmails = users.map(user => user.email);
-      setSelectedUsers(new Set(allEmails));
-    } else {
-      setSelectedUsers(new Set());
-    }
-  };
-
-  const handleSelectUser = (event: React.ChangeEvent<HTMLInputElement>, email: string) => {
-    const newSelectedUsers = new Set(selectedUsers);
-    if (event.target.checked) {
-      newSelectedUsers.add(email);
-    } else {
-      newSelectedUsers.delete(email);
-    }
-    setSelectedUsers(newSelectedUsers);
   };
 
   const handleSort = (property: string) => {
@@ -62,246 +59,170 @@ const Tables = () => {
     setOrderBy(property);
   };
 
-  const filteredUsers = users.filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedUsers(event.target.checked ? new Set(filteredUsers.map(u => u.email)) : new Set());
+  };
 
-  const sortedUsers = filteredUsers.sort((a, b) => {
-    if (orderBy === 'name') {
-      return order === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+  const handleSelectUser = (e: React.ChangeEvent<HTMLInputElement>, email: string) => {
+    const updated = new Set(selectedUsers);
+    e.target.checked ? updated.add(email) : updated.delete(email);
+    setSelectedUsers(updated);
+  };
+
+  const handleAddCustomerOpen = () => setAddModalOpen(true);
+
+  const handleAddCustomerClose = () => {
+    setAddModalOpen(false);
+    setNewCustomer({ name: '', email: '', password: '' });
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewCustomer(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddCustomer = () => {
+    const { name, email, password } = newCustomer;
+    if (name && email && password) {
+      const newUser = {
+        ...newCustomer,
+        createdAt: new Date().toLocaleDateString(),
+        isActive: true,
+      };
+      addUser(newUser);
+      handleAddCustomerClose();
+      setPage(0); // optional: go to first page
+    } else {
+      alert('Please fill out all fields.');
     }
-    return 0; 
-  });
+  };
 
-  const [addModalOpen, setAddModalOpen] = useState(false);
-const [newCustomer, setNewCustomer] = useState({
-  name: '',
-  email: '',
-  password: ''
-});
+  const handleStatusChange = (email: string, isActive: boolean) => {
+    updateUserStatus(email, isActive);
+  };
 
-const handleAddCustomerOpen = () => setAddModalOpen(true);
-const handleAddCustomerClose = () => {
-  setAddModalOpen(false);
-  setNewCustomer({ name: '', email: '', password: '' });
-};
-
-const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const { name, value } = e.target;
-  setNewCustomer(prev => ({ ...prev, [name]: value }));
-};
-
-const handleAddCustomer = () => {
-  console.log('Customer to Add:', newCustomer);
- 
-  handleAddCustomerClose();
-};
   return (
-    <Box sx={{flexDirection: 'column', alignItems: 'center', textAlign: 'center', width: '100%' }}>
-      <Paper sx={{ width: '100%', }}>
+    <Box sx={{ width: '100%' }}>
+      <Paper>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: 2 }}>
-      
           <TextField
             label="Search"
-            variant="outlined"
-            size="small"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            size="small"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
                   <Search />
                 </InputAdornment>
-              ),
+              )
             }}
           />
-
-
-                                                                                                                                
-
-       
-          <Button variant="contained" color="primary" onClick={handleAddCustomerOpen} sx={{
-            background: "linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%)",
-            '&:hover': {
-                      background: "linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 35%, rgba(0,212,255,1) 100%)",
-                    },
-          }}>
-  Add Customer
-</Button>
+          <Button onClick={handleAddCustomerOpen} variant="contained">
+            Add Customer
+          </Button>
         </Box>
 
-      
-        <Table sx={{ width: '100%' ,}}>
-            <TableHead  sx={{
-             borderRadius:'5px',
-                  background: "#F0F8FF",
-            }}>
-              <TableRow>
-                <TableCell padding="checkbox" width='100%'>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell padding="checkbox">
+                <Checkbox
+                  checked={selectedUsers.size === filteredUsers.length}
+                  onChange={handleSelectAll}
+                />
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={orderBy === 'name'}
+                  direction={order}
+                  onClick={() => handleSort('name')}
+                >
+                  Name
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Created Date</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell align="center">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(user => (
+              <TableRow key={user.email}>
+                <TableCell padding="checkbox">
                   <Checkbox
-                    checked={selectedUsers.size === users.length}
-                    onChange={handleSelectAll}
-                    inputProps={{
-                      'aria-label': 'select all users',
-                    }}
+                    checked={selectedUsers.has(user.email)}
+                    onChange={(e) => handleSelectUser(e, user.email)}
                   />
                 </TableCell>
+                <TableCell>{user.name}</TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.createdAt}</TableCell>
                 <TableCell>
-                  <TableSortLabel
-                    active={orderBy === 'name'}
-                    direction={orderBy === 'name' ? order : 'asc'}
-                    onClick={() => handleSort('name')}
-                  >
-                    Name
-                  </TableSortLabel>
+                  <Switch
+                    checked={user.isActive}
+                    onChange={(e) => handleStatusChange(user.email, e.target.checked)}
+                  />
                 </TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Password</TableCell>
-                <TableCell align="center">Actions</TableCell>
+                <TableCell align="center">
+                  <IconButton onClick={() => handleOpen(user)}>
+                    <Visibility />
+                  </IconButton>
+                  <IconButton onClick={() => handleDelete(user.email)}>
+                    <Delete color="error" />
+                  </IconButton>
+                </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {sortedUsers.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={5}>No users available</TableCell>
-                </TableRow>
-              ) : (
-                sortedUsers
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((user: any) => (
-                    <TableRow key={user.id}>
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={selectedUsers.has(user.email)}
-                          onChange={(e) => handleSelectUser(e, user.email)}
-                          inputProps={{
-                            'aria-labelledby': user.name,
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell>{user.name}</TableCell>
-                      <TableCell>{user.email}</TableCell>
-                      <TableCell>{user.password}</TableCell>
-                      <TableCell align="center">
-                        <IconButton onClick={() => handleOpen(user)}>
-                          <Visibility sx={{ color: "primary.main" }} />
-                        </IconButton>
-                        <IconButton onClick={() => handleDelete(user.email)} sx={{ ml: 2 }}>
-                          <Delete sx={{ color: "error.main" }} />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))
-              )}
-            </TableBody>
-          </Table>
-        {/* </TableContainer> */}
+            ))}
+            {filteredUsers.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={6} align="center">
+                  No users found.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
 
-        {/* Pagination */}
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
-          component="div"
           count={filteredUsers.length}
-          rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
 
-      {/* Modal */}
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+      {/* View Modal */}
+      <Modal open={open} onClose={handleClose}>
         <Box sx={modalStyle}>
-          <IconButton
-            onClick={handleClose}
-            sx={{
-              position: 'absolute',
-              top: 8,
-              right: 8,
-              color: 'grey.500',
-            }}
-          >
+          <IconButton onClick={handleClose} sx={{ position: 'absolute', top: 8, right: 8 }}>
             <Close />
           </IconButton>
           {selectedUser && (
             <>
-              <Typography id="modal-modal-title" variant="h6" component="h2" align="center">
-                User Details
-              </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                <strong>Name:</strong> {selectedUser.name}
-              </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 1 }}>
-                <strong>Email:</strong> {selectedUser.email}
-              </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 1 }}>
-                <strong>Password:</strong> {selectedUser.password}
-              </Typography>
+              <Typography variant="h6">User Details</Typography>
+              <Typography>Name: {selectedUser.name}</Typography>
+              <Typography>Email: {selectedUser.email}</Typography>
             </>
           )}
         </Box>
       </Modal>
-      <Modal
-        open={addModalOpen}
-        onClose={handleAddCustomerClose}
-        aria-labelledby="add-customer-title"
-      >
+
+      {/* Add Customer Modal */}
+      <Modal open={addModalOpen} onClose={handleAddCustomerClose}>
         <Box sx={modalStyle}>
-          <IconButton
-            onClick={handleAddCustomerClose}
-            sx={{
-              position: 'absolute',
-              top: 8,
-              right: 8,
-              color: 'grey.500',
-            }}
-          >
+          <IconButton onClick={handleAddCustomerClose} sx={{ position: 'absolute', top: 8, right: 8 }}>
             <Close />
           </IconButton>
-          <Typography id="add-customer-title" variant="h6" component="h2" align="center" gutterBottom>
-            Add New Customer
-          </Typography>
-          <TextField
-            fullWidth
-            label="Name"
-            name="name"
-            value={newCustomer.name}
-            onChange={handleInputChange}
-            margin="normal"
-          />
-          <TextField
-            fullWidth
-            label="Email"
-            name="email"
-            value={newCustomer.email}
-            onChange={handleInputChange}
-            margin="normal"
-          />
-          <TextField
-            fullWidth
-            label="Password"
-            name="password"
-            type="password"
-            value={newCustomer.password}
-            onChange={handleInputChange}
-            margin="normal"
-          />
-          <Button
-            fullWidth
-            variant="contained"
-            color="primary"
-        
-            onClick={handleAddCustomer}
-            sx={{
-              background: "linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,1) 35%, rgba(0,212,255,1) 100%)",
-              '&:hover': {
-                        background: "linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 35%, rgba(0,212,255,1) 100%)",
-                      },mt: 2
-            }}>
-          
+          <Typography variant="h6" gutterBottom>Add New Customer</Typography>
+          <TextField fullWidth label="Name" name="name" value={newCustomer.name} onChange={handleInputChange} margin="normal" />
+          <TextField fullWidth label="Email" name="email" value={newCustomer.email} onChange={handleInputChange} margin="normal" />
+          <TextField fullWidth label="Password" name="password" type="password" value={newCustomer.password} onChange={handleInputChange} margin="normal" />
+          <Button fullWidth variant="contained" onClick={handleAddCustomer} sx={{ mt: 2 }}>
             Add Customer
           </Button>
         </Box>
@@ -311,15 +232,15 @@ const handleAddCustomer = () => {
 };
 
 const modalStyle = {
-  position: 'absolute' as 'absolute',
+  position: 'absolute' as const,
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
+  width: 400,
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
-  borderRadius: 2,
-  width: 400,
+  borderRadius: 2
 };
 
 export default Tables;

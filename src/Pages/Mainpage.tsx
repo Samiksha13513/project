@@ -55,12 +55,12 @@ function DemoPageContent({ pathname }: { pathname: string }) {
                     <Table /> 
                 </div>
             )}
-            {pathname === "/profile" && (
+            {/* {pathname === "/profile" && (
                 <div>
                     <Typography variant="h5" justifyContent={'center'}></Typography>
                     <Profile/> 
-                </div>
-                 )}
+                </div> */}
+                 {/* )} */}
         </Box>
     );
 }
@@ -94,7 +94,7 @@ const Mainpage = () => {
                
                     { segment: "dashboard", title: "OverView", icon: <DashboardIcon /> },
                     { segment: "users", title: "Customers", icon: <PeopleIcon /> },
-                    { segment: "profile", title: "Profile", icon: <AccountCircle/> },
+                    // { segment: "profile", title: "Profile", icon: <AccountCircle/> },
             ]}
             
         >

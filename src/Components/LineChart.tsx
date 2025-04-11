@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Line } from 'react-chartjs-2';
 import { Box } from '@mui/material';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
@@ -32,7 +32,12 @@ const LineChart = () => {
   };
 
   return (
-    <Box>
+   <Box sx={{
+            marginTop:'44px',
+            height:'400px',
+            width:'300px',
+            paddingLeft:'8px'
+           }}>
       <Line data={data} options={options} />
     </Box>
   );
