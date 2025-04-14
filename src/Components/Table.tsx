@@ -6,8 +6,10 @@ import {
 } from '@mui/material';
 import { Visibility, Delete, Close, Search } from '@mui/icons-material';
 import { useUser } from '../ContextApi/UserContext';
+import Mainpage from '../Pages/Mainpage';
 
 const Tables = () => {
+ 
   const { users, deleteUser, updateUserStatus, addUser, currentUser } = useUser();
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [open, setOpen] = useState(false);
@@ -91,7 +93,7 @@ const Tables = () => {
       };
       addUser(newUser);
       handleAddCustomerClose();
-      setPage(0); // optional: go to first page
+      setPage(0);
     } else {
       alert('Please fill out all fields.');
     }
@@ -102,6 +104,8 @@ const Tables = () => {
   };
 
   return (
+    <>
+   
     <Box sx={{ width: '100%' }}>
       <Paper>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: 2 }}>
@@ -228,9 +232,10 @@ const Tables = () => {
         </Box>
       </Modal>
     </Box>
+    </>
+  
   );
 };
-
 const modalStyle = {
   position: 'absolute' as const,
   top: '50%',

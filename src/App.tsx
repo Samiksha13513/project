@@ -1,4 +1,4 @@
-// App.tsx
+
 import './App.scss';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Signup from './Pages/Signup';
@@ -9,6 +9,7 @@ import Dashboard from './Pages/Dashboard';
 import Table from './Components/Table';
 import Profile from './Components/Profile';
 import { PrivateRoute, PublicRoute } from './ProtectedRoutes';
+
 
 function App() {
   return (
@@ -25,6 +26,8 @@ function App() {
           <Route path="/table" element={<PrivateRoute><Table /></PrivateRoute>} />
           <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
         </Routes>
+
+       
       </Router>
     </UserProvider>
   );

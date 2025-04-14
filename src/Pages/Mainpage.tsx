@@ -1,13 +1,12 @@
-
-import { Box, Typography, Stack, IconButton, TextField, Tooltip } from "@mui/material";
+import React from "react";
+import { Box, Typography, Stack, Button } from "@mui/material";
 import { AppProvider, DashboardLayout, ThemeSwitcher } from "@toolpad/core";
- import { createTheme } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
 import { useDemoRouter } from "@toolpad/core/internal";
 import Myprofile from '../Components/Myprofile';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import PeopleIcon from '@mui/icons-material/People';;
-
-import { AccountCircle} from '@mui/icons-material';
+import PeopleIcon from '@mui/icons-material/People';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Dashboard from "./Dashboard";
 import Table from "../Components/Table"; 
 import Profile from '../Components/Profile';
@@ -36,49 +35,44 @@ const CustomAppTitle = () => (
 
 function DemoPageContent({ pathname }: { pathname: string }) {
     return (
-
         <Box
             sx={{
-                 py: 4,
-                width:'100%',
+                py: 4,
+                width: '100%',
             }}
         >
             {pathname === "/dashboard" && (
                 <div>
-                <Typography variant="h5"></Typography>
-                <Dashboard/>
+                    {/* <Typography variant="h5">Dashboard Overview</Typography> */}
+                     <Dashboard />  
                 </div>
             )}
             {pathname === "/users" && (
                 <div>
-                    <Typography variant="h5" justifyContent={'center'}></Typography>
-                    <Table /> 
+                     <Typography variant="h5">Users</Typography> 
+                      <Table /> 
                 </div>
             )}
-            {/* {pathname === "/profile" && (
-                <div>
-                    <Typography variant="h5" justifyContent={'center'}></Typography>
-                    <Profile/> 
-                </div> */}
-                 {/* )} */}
+            {pathname === "/profile" && (
+              
+         <div>
+           
+                <Myprofile/> 
+            </div> 
+            )}    
         </Box>
     );
 }
 
 const Mainpage = () => {
-   
     const router = useDemoRouter("/dashboard");
 
     const ToolbarActionsSearch = () => (
-         <Stack direction="row" alignItems="center">
-            
-             <ThemeSwitcher/>
-
+        <Stack direction="row" alignItems="center">
+            <ThemeSwitcher />
             <Myprofile />
-          
         </Stack>
-    
-    )
+    );
 
     const SidebarFooter = ({ mini }: { mini: boolean }) => (
         <Typography variant="caption" sx={{ m: 1, whiteSpace: 'nowrap', overflow: 'hidden' }}>
@@ -88,15 +82,14 @@ const Mainpage = () => {
 
     return (
         <AppProvider
-        router={router}
-        theme={demoTheme}
+            router={router}
+            theme={demoTheme}
             navigation={[
-               
-                    { segment: "dashboard", title: "OverView", icon: <DashboardIcon /> },
-                    { segment: "users", title: "Customers", icon: <PeopleIcon /> },
-                    // { segment: "profile", title: "Profile", icon: <AccountCircle/> },
+                { segment: "dashboard", title: "OverView", icon: <DashboardIcon    /> },
+                { segment: "users", title: "Customers", icon: <PeopleIcon />       },
+                // { segment: "profile", title: "Customers", icon: <PeopleIcon /> },
+                
             ]}
-            
         >
             <DashboardLayout
                 slots={{
@@ -112,24 +105,3 @@ const Mainpage = () => {
 };
 
 export default Mainpage;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   
-
-
-
-
-

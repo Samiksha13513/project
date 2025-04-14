@@ -3,9 +3,12 @@ import LineChart from '../Components/LineChart';
 import PieChart from '../Components/PieChart';
 import BarChart from '../Components/BarChart';
 import DoughnutChart from '../Components/DoughnutChart';
+import Mainpage from './Mainpage';
 
 const Dashboard = () => {
   return (
+    <>
+   
     <Box sx={{ p: 3 }}>
       <Grid container spacing={2}>
         <Grid item xs={6} sm={6} sx={{ p: 1 }}>
@@ -29,6 +32,7 @@ const Dashboard = () => {
         </Grid>
       </Grid>
     </Box>
+    </>
   );
 };
 

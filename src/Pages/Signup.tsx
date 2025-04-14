@@ -11,11 +11,10 @@ import IconButton from "@mui/material/IconButton";
 import { useState } from "react";
 import { useUser } from "../ContextApi/UserContext";
 import { Link } from 'react-router-dom';
-
+import  image1 from '../assets/image1.png';
 export default function SignupCard() {
   const { addUser } = useUser();
   const navigate = useNavigate();
-
   const validationSchema = Yup.object({
     name: Yup.string()
       .matches(/^[a-zA-Z]+$/, "Name must contain only letters.")
@@ -33,163 +32,123 @@ export default function SignupCard() {
       .matches(/[!@#$%^&*()_+={}\[\]:;"'<>,.?/-]/, "Password must contain at least one special character.")
       .required("Password is required"),
   });
-
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: yupResolver(validationSchema),
     mode: 'onTouched',
   });
-
   const [showPassword, setShowPassword] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
-
   const onSubmit = (data: FormData) => {
-    setLoading(true); 
-  
+    setLoading(true);
     const storedUsers: any[] = JSON.parse(localStorage.getItem('users') || '[]');
     const userExists = storedUsers.some(user => user.email === data.email);
-    
     if (userExists) {
       setSnackbarMessage("This email is already registered!");
       setSnackbarOpen(true);
-      setLoading(false); 
+      setLoading(false);
       return;
     }
-
     addUser({
       name: data.name,
       email: data.email,
       password: data.password,
     });
-
     setSnackbarMessage("Sign Up successful!");
     setSnackbarOpen(true);
-
     localStorage.setItem('user', JSON.stringify(data));
-
     setTimeout(() => {
       setLoading(false);
       navigate("/login");
-    }, 1500); 
+    }, 1500);
   };
-
   return (
     <>
-      <Typography
-        sx={{
-          backgroundImage: 'url("https://cdn.dribbble.com/userupload/12426545/file/original-ffb3b267b3b794af825acf4978c4cd3d.jpg?resize=1024x768&vertical=center")',
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          padding: 2,
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            minHeight: "90vh",
-            marginLeft: "500px",
-            marginTop: "-33px",
-          }}
-        >
-          <Card
-            sx={{
-              maxWidth: 444,
-              padding: 3,
-              marginTop: 6,
-              backgroundColor: "white",
+  <Box display="flex" minHeight="100vh">
+   
+    <Box
+      flex={1}
+      sx={{
+        backgroundImage: `url(${image1})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    />
+   
+    <Box
+      flex={1}
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      padding={4}
+    >
+      <Card sx={{ width: '100%', maxWidth: 400, padding: 4 }}>
+        <Typography variant="h5" textAlign="center" marginBottom={2}>
+          Sign Up
+        </Typography>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <TextField
+            label="Name"
+            fullWidth
+            margin="normal"
+            {...register("name")}
+            error={!!errors.name}
+            helperText={errors.name?.message}
+          />
+          <TextField
+            label="Email"
+            fullWidth
+            margin="normal"
+            {...register("email")}
+            error={!!errors.email}
+            helperText={errors.email?.message}
+          />
+          <TextField
+            label="Password"
+            fullWidth
+            margin="normal"
+            type={showPassword ? "text" : "password"}
+            {...register("password")}
+            error={!!errors.password}
+            helperText={errors.password?.message}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={handleClickShowPassword}>
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              )
             }}
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ marginTop: 2 }}
+            disabled={loading}
           >
-            <Typography variant="h5" component="div" gutterBottom align="center">
-              Sign In
-            </Typography>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <TextField
-                label="Name"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                autoComplete="name"
-                {...register("name")}
-                error={!!errors.name}
-                helperText={errors.name?.message}
-              />
-              <TextField
-                label="Email"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                autoComplete="email"
-                {...register("email")}
-                error={!!errors.email}
-                helperText={errors.email?.message}
-              />
-              <TextField
-                label="Password"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                autoComplete="current-password"
-                {...register("password")}
-                error={!!errors.password}
-                helperText={errors.password?.message}
-                type={showPassword ? "text" : "password"}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label={showPassword ? "hide the password" : "display the password"}
-                        onClick={handleClickShowPassword}
-                        edge="end"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <Typography gutterBottom align="center">
-                <Button
-                  variant="contained"
-                  fullWidth
-                  sx={{
-                    marginTop: 2,
-                    background: "linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%)",
-                    color: "white",
-                    borderRadius: 2,
-                    '&:hover': {
-                      background: "linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 35%, rgba(0,212,255,1) 100%)",
-                    },
-                  }}
-                  type="submit"
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <CircularProgress size={24} sx={{ color: 'white' }} /> 
-                  ) : (
-                    "Sign in"
-                  )}
-                </Button>
-                <Link to='/login' className="text-blue-600 text-sm mt-3 hover:underline text-center">
-                  Already Registered? | Login
-                </Link>
-              </Typography>
-            </form>
-          </Card>
-        </Box>
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={2000}
-          onClose={handleCloseSnackbar}
-          message={snackbarMessage}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        />
-      </Typography>
+            {loading ? <CircularProgress size={24} /> : "Sign Up"}
+          </Button>
+          <Typography variant="body2" textAlign="center" mt={2}>
+            Already have an account? <Link to="/login">Log in</Link>
+          </Typography>
+        </form>
+      </Card>
+    </Box>
+    <Snackbar
+      open={snackbarOpen}
+      autoHideDuration={3000}
+      onClose={handleCloseSnackbar}
+      message={snackbarMessage}
+    />
+  </Box>
     </>
   );
 }

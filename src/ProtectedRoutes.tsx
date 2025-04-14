@@ -10,7 +10,8 @@ interface Props {
 // Protects routes for authenticated users only
 export const PrivateRoute = ({ children }: Props) => {
   const { currentUser } = useUser();
-  return currentUser ? children : <Navigate to="/login" replace />;
+  return currentUser ? children : <Navigate to="/" replace />;
+
 };
 
 // Redirects logged-in users away from login/signup

@@ -45,7 +45,7 @@ export default function AccountMenu() {
 
   const handleLogout = () => {
     logoutUser();
-    navigate('/');
+    navigate('/profile');
   };
 
   const userInitial = currentUser?.name?.charAt(0).toUpperCase() || 'U';
