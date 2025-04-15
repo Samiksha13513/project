@@ -17,13 +17,15 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../ContextApi/UserContext';
+import { useDemoRouter } from '@toolpad/core/internal';
 
-export default function AccountMenu() {
+export default function AccountMenu({onNavigate}) {
   const navigate = useNavigate();
+
   const { currentUser, logoutUser } = useUser();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [openModal, setOpenModal] = React.useState(false);
+  
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -35,13 +37,11 @@ export default function AccountMenu() {
   };
 
   const handleProfileClick = () => {
-    setOpenModal(true);
-    handleCloseMenu();
+   
+    onNavigate("/profile")
   };
 
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
+
 
   const handleLogout = () => {
     logoutUser();
@@ -64,7 +64,7 @@ export default function AccountMenu() {
 
   return (
     <>
-      <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center', }}>
         <Tooltip title="Account settings">
           <IconButton onClick={handleClick} size="small" sx={{ ml: 2 }}>
             <Avatar sx={{ width: 42, height: 42 }}>{userInitial}</Avatar>
@@ -83,47 +83,26 @@ export default function AccountMenu() {
             sx: {
               overflow: 'visible',
               mt: 1.5,
+              p:2,
+              boxShadow:"1px 2px 5px black",
               '& .MuiAvatar-root': {
                 width: 32,
                 height: 32,
                 ml: -0.5,
                 mr: 1,
               },
-              '&::before': {
-                content: '""',
-                display: 'block',
-                position: 'absolute',
-                top: 0,
-                right: 14,
-                width: 10,
-                height: 10,
-                bgcolor: 'background.paper',
-                transform: 'translateY(-50%) rotate(45deg)',
-                zIndex: 0,
-                boxShadow:'inherit',
-              },
+            
             },
           },
         }}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={handleProfileClick}>
+        <MenuItem onClick={handleProfileClick} >
           <Avatar /> Profile
         </MenuItem>
         <Divider />
-        <MenuItem>
-          <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
-          Add another account
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
-          Settings
-        </MenuItem>
+   
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
@@ -132,27 +111,7 @@ export default function AccountMenu() {
         </MenuItem>
       </Menu>
 
-      <Modal
-        open={openModal}
-        onClose={handleCloseModal}
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{ backdrop: { TransitionComponent: Fade } }}
-      >
-        <Fade in={openModal}>
-          <Box sx={style}>
-            <Typography variant="h6" align="center">User Profile</Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 2 }}>
-              <Avatar sx={{ width: 100, height: 100, mb: 2 }}>{userInitial}</Avatar>
-              <Typography>Name: {currentUser?.name}</Typography>
-              <Typography color="textSecondary">Email: {currentUser?.email}</Typography>
-            </Box>
-            <Button onClick={handleCloseModal} variant="contained" fullWidth sx={{ mt: 2 }}>
-              Close
-            </Button>
-          </Box>
-        </Fade>
-      </Modal>
+     
     </>
   );
 }

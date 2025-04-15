@@ -62,7 +62,13 @@ const Login = () => {
   };
   return (
     <Box display="flex" minHeight="100vh">
-    
+    {snackbarMessage === "Sign Up successful!" && (
+          <Box textAlign="center" mt={2}>
+            <Typography variant="subtitle1" color="green">
+              {snackbarMessage}
+            </Typography>
+          </Box>
+        )}
       <Box
         flex={1}
         sx={{
@@ -84,8 +90,7 @@ const Login = () => {
             padding: 3,
             marginTop: 3,
             height: '500px', 
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.7)', // Dark shadow
-            display: 'flex',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.7)',
             flexDirection: 'column',
             justifyContent: 'center',
           }}
