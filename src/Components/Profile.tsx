@@ -1,7 +1,7 @@
 import { Box, Typography, Avatar, Card, CardContent, Divider, Grid, Button, IconButton } from '@mui/material';
 import { useUser } from '../ContextApi/UserContext';
 import { useNavigate } from 'react-router-dom';
-import { Close } from '@mui/icons-material';
+
 
 const Profile = () => {
   const { currentUser, logoutUser } = useUser();
@@ -21,12 +21,12 @@ const Profile = () => {
   };
 
   const handleClose = () => {
-    navigate('/'); // Navigate to the homepage or previous page when close is clicked
+    navigate('/'); 
   };
 
   return (
     <Box sx={{ padding: 4, display: 'flex', justifyContent: 'center', position: 'relative' }}>
-      {/* Close Button at top-left of the Box */}
+     
       
 
       <Card sx={{ width: 400, boxShadow: 1 }}> 
@@ -50,13 +50,13 @@ const Profile = () => {
           </Grid>
           <Divider sx={{ width: '100%', marginBottom: 2 }} />
           <Grid container spacing={1}>
+            {/* <Grid item xs={12}>
+              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>Active</Typography>
+              <Typography variant="body2" color="textSecondary">{currentUser. isActive || 'Not Provided'}</Typography>
+            </Grid> */}
             <Grid item xs={12}>
-              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>Phone</Typography>
-              <Typography variant="body2" color="textSecondary">{currentUser.phone || 'Not Provided'}</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>Address</Typography>
-              <Typography variant="body2" color="textSecondary">{currentUser.address || 'Not Provided'}</Typography>
+              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>Created</Typography>
+              <Typography variant="body2" color="textSecondary">{currentUser.createdAt || 'Not Provided'}</Typography>
             </Grid>
           </Grid>
           

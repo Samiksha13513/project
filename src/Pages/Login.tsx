@@ -20,55 +20,62 @@ import { useUser } from '../ContextApi/UserContext';
 import { FormDatas } from '../types/index';
 import { Link } from 'react-router-dom';
 import images2 from '../assets/image2.png';
+
 const schema = Yup.object({
   email: Yup.string().email('Invalid email format').required('Email is required'),
   password: Yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
 });
+
 const Login = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<FormDatas>({
     resolver: yupResolver(schema),
     mode: 'onTouched',
   });
+
   const { loginUser } = useUser();
   const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
   const [loaderState, setLoaderState] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [navigateAfterSnackbar, setNavigateAfterSnackbar] = useState(false);
+
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleCloseSnackbar = () => setSnackbarOpen(false);
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+    if (navigateAfterSnackbar) {
+      navigate('/mainpage');
+    }
+  };
+
   const onSubmit = (data: FormDatas) => {
     setLoaderState(true);
+
     setTimeout(() => {
       const storedUsers = localStorage.getItem('users');
       const users = storedUsers ? JSON.parse(storedUsers) : [];
       const user = users.find(
         (user: any) => user.email === data.email && user.password === data.password
       );
+
       if (user) {
         setSnackbarMessage('Login successful!');
         setSnackbarOpen(true);
         loginUser(user);
-        setTimeout(() => {
-          setLoaderState(false);
-          navigate('/mainpage');
-        }, 2000);
+        setNavigateAfterSnackbar(true); // Triggers redirect after snackbar closes
+        setLoaderState(false);
       } else {
         setSnackbarMessage('Invalid credentials!');
         setSnackbarOpen(true);
         setLoaderState(false);
       }
-    }, 2000);
+    }, 1000);
   };
+
   return (
     <Box display="flex" minHeight="100vh">
-    {snackbarMessage === "Sign Up successful!" && (
-          <Box textAlign="center" mt={2}>
-            <Typography variant="subtitle1" color="green">
-              {snackbarMessage}
-            </Typography>
-          </Box>
-        )}
       <Box
         flex={1}
         sx={{
@@ -77,19 +84,13 @@ const Login = () => {
           backgroundPosition: 'center',
         }}
       />
-    
-      <Box
-        flex={1}
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-      >
+      <Box flex={1} display="flex" justifyContent="center" alignItems="center">
         <Card
           sx={{
             maxWidth: 400,
             padding: 3,
             marginTop: 3,
-            height: '500px', 
+            height: '500px',
             boxShadow: '0 4px 20px rgba(0, 0, 0, 0.7)',
             flexDirection: 'column',
             justifyContent: 'center',
@@ -150,19 +151,19 @@ const Login = () => {
                 'Login'
               )}
             </Button>
-            {/* Link directly below the button */}
+
             <Box textAlign="center" mt={2}>
-              <Link to='/' className="text-blue-600 text-sm hover:underline">
+              <Link to="/" className="text-blue-600 text-sm hover:underline">
                 New user | Sign in
               </Link>
             </Box>
           </form>
         </Card>
       </Box>
-      {/* Snackbar */}
+
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={2000}
+        autoHideDuration={3000}
         onClose={handleCloseSnackbar}
         message={snackbarMessage}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
@@ -170,4 +171,5 @@ const Login = () => {
     </Box>
   );
 };
+
 export default Login;

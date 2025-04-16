@@ -164,29 +164,34 @@ const Tables = () => {
           </Box>
 
           <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedUsers.size === filteredUsers.length}
-                    onChange={handleSelectAll}
-                  />
-                </TableCell>
-                <TableCell>
-                  <TableSortLabel
-                    active={orderBy === "name"}
-                    direction={order}
-                    onClick={() => handleSort("name")}
-                  >
-                    Name
-                  </TableSortLabel>
-                </TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Created Date</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell align="center">Actions</TableCell>
-              </TableRow>
-            </TableHead>
+          <TableHead>
+  <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+    <TableCell padding="checkbox">
+      <Checkbox
+        checked={selectedUsers.size === filteredUsers.length}
+        onChange={handleSelectAll}
+      />
+    </TableCell>
+    <TableCell sx={{ color: "grey.700", fontWeight: "bold" }}>
+      <TableSortLabel
+        active={orderBy === "name"}
+        direction={order}
+        onClick={() => handleSort("name")}
+      >
+        Name
+      </TableSortLabel>
+    </TableCell>
+    <TableCell sx={{ color: "grey.700", fontWeight: "bold" }}>Email</TableCell>
+    <TableCell sx={{ color: "grey.700", fontWeight: "bold" }}>
+      Created Date
+    </TableCell>
+    <TableCell sx={{ color: "grey.700", fontWeight: "bold" }}>Status</TableCell>
+    <TableCell sx={{ color: "grey.700", fontWeight: "bold" }} align="center">
+      Actions
+    </TableCell>
+  </TableRow>
+</TableHead>
+
 
             <TableBody>
               {filteredUsers
@@ -273,12 +278,28 @@ const Tables = () => {
               <Close />
             </IconButton>
             {selectedUser && (
-              <>
-                <Typography variant="h6">User Details</Typography>
-                <Typography>Name: {selectedUser.name}</Typography>
-                <Typography>Email: {selectedUser.email}</Typography>
-              </>
-            )}
+  <>
+    <Typography variant="h5" sx={{ fontWeight: "bold", mb: 2 }}>
+      User Details
+    </Typography>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+      <Typography>
+        <strong>Name:</strong> {selectedUser.name}
+      </Typography>
+      <Typography>
+        <strong>Email:</strong> {selectedUser.email}
+      </Typography>
+      <Typography>
+        <strong>Created At:</strong> {selectedUser.createdAt}
+      </Typography>
+      <Typography>
+        <strong>Status:</strong>{" "}
+        {selectedUser.isActive ? "Active" : "Inactive"}
+      </Typography>
+    </Box>
+  </>
+)}
+
           </Box>
         </Modal>
 
@@ -339,10 +360,12 @@ const modalStyle = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: "background.paper",
-  boxShadow: 24,
+  bgcolor: "#ffffff",
+  boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
   p: 4,
-  borderRadius: 2,
+  borderRadius: 3,
+  border: "1px solid #e0e0e0",
 };
+
 
 export default Tables;

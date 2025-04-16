@@ -5,10 +5,12 @@ import { useDemoRouter } from "@toolpad/core/internal";
 import Myprofile from "../Components/Myprofile";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
-
 import Dashboard from "./Dashboard";
 import Table from "../Components/Table";
+import TaskTable from "../Pages/TaskTable";
+import AddTaskIcon from '@mui/icons-material/AddTask';
 import Profile from "../Components/Profile";
+
 const demoTheme = createTheme({
   cssVariables: {
     colorSchemeSelector: "data-toolpad-color-scheme",
@@ -29,7 +31,6 @@ const CustomAppTitle = () => (
     <Typography variant="h5">Dashboard</Typography>
   </Box>
 );
-
 function DemoPageContent({ pathname }: { pathname: string }) {
   return (
     <Box
@@ -45,13 +46,16 @@ function DemoPageContent({ pathname }: { pathname: string }) {
       )}
       {pathname === "/users" && (
         <div>
-          {/* <Typography variant="h5">Users</Typography> */}
           <Table />
         </div>
-      )}
-      {pathname === "/profile" && (
+      )} {pathname === "/profile" && (
         <div>
-          <Profile />
+          <Profile/>
+        </div>
+      )}
+      {pathname === "/tasktable" && (
+        <div>
+          <TaskTable/>
         </div>
       )}
     </Box>
@@ -84,6 +88,7 @@ const Mainpage = () => {
       navigation={[
         { segment: "dashboard", title: "OverView", icon: <DashboardIcon /> },
         { segment: "users", title: "Customers", icon: <PeopleIcon /> },
+        { segment: "tasktable", title: "Task", icon: <AddTaskIcon/> },
       ]}
     >
       <DashboardLayout

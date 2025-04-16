@@ -4,10 +4,9 @@ interface User {
   name: string;
   email: string;
   password: string;
-  isActive: boolean;
+  isActive?: boolean;
   createdAt?: string;
 }
-
 interface UserContextType {
   users: User[];
   currentUser: User | null;
@@ -17,13 +16,11 @@ interface UserContextType {
   loginUser: (user: User) => void;
   logoutUser: () => void;
 }
-
 export const UserContext = createContext<UserContextType | undefined>(undefined);
 
 interface UserProviderProps {
   children: ReactNode;
 }
-
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [users, setUsers] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<User | null>(null);

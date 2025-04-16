@@ -7,17 +7,12 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import PersonAdd from '@mui/icons-material/PersonAdd';
-import Settings from '@mui/icons-material/Settings';
+
 import Logout from '@mui/icons-material/Logout';
-import Modal from '@mui/material/Modal';
-import Fade from '@mui/material/Fade';
-import Backdrop from '@mui/material/Backdrop';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../ContextApi/UserContext';
-import { useDemoRouter } from '@toolpad/core/internal';
+
 
 export default function AccountMenu({onNavigate}) {
   const navigate = useNavigate();
@@ -40,9 +35,6 @@ export default function AccountMenu({onNavigate}) {
    
     onNavigate("/profile")
   };
-
-
-
   const handleLogout = () => {
     logoutUser();
     navigate('/profile');
@@ -61,7 +53,6 @@ export default function AccountMenu({onNavigate}) {
     p: 4,
     borderRadius: 2,
   };
-
   return (
     <>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center', }}>
@@ -71,7 +62,6 @@ export default function AccountMenu({onNavigate}) {
           </IconButton>
         </Tooltip>
       </Box>
-
       <Menu
         anchorEl={anchorEl}
         open={open}
@@ -110,8 +100,6 @@ export default function AccountMenu({onNavigate}) {
           Logout
         </MenuItem>
       </Menu>
-
-     
     </>
   );
 }
