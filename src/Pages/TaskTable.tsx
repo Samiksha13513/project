@@ -24,7 +24,6 @@ export default function DataTable() {
   const [search, setSearch] = useState('');
   const [openModal, setOpenModal] = useState(false);
 
-
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored && currentUser?.email) {

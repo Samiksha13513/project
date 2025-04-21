@@ -11,7 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import { useState } from "react";
 import { useUser } from "../ContextApi/UserContext";
 import { Link } from 'react-router-dom';
-import  image1 from '../assets/image1.png';
+import  image2 from '../assets/image2.png';
 
 export default function SignupCard() {
   const { addUser } = useUser();
@@ -55,7 +55,6 @@ export default function SignupCard() {
       setLoading(false);
       return;
     }
-
     addUser({
       name: data.name,
       email: data.email,
@@ -63,7 +62,7 @@ export default function SignupCard() {
     });
     setSnackbarMessage("Sign Up successful!");
     setSnackbarOpen(true);
-    // localStorage.setItem('user', JSON.stringify(data));
+    localStorage.setItem('user', JSON.stringify(data));
     setTimeout(() => {
       setLoading(false);
       navigate("/login");
@@ -72,16 +71,16 @@ export default function SignupCard() {
   return (
     <>
   <Box display="flex" minHeight="100vh">
-   
+    
     <Box
       flex={1}
       sx={{
-        backgroundImage: `url(${image1})`,
+        backgroundImage: `url(${image2})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     />
-   
+  
     <Box
       flex={1}
       display="flex"
@@ -89,7 +88,7 @@ export default function SignupCard() {
       alignItems="center"
       padding={4}
     >
-      <Card sx={{ width: '100%', maxWidth: 400, padding: 4 , boxShadow: '0 9px 26px rgba(0, 0, 0, 0.1)'}}>
+      <Card sx={{ width: '100%', maxWidth: 400, padding: 4 }}>
         <Typography variant="h5" textAlign="center" marginBottom={2}>
           Sign Up
         </Typography>
@@ -139,24 +138,19 @@ export default function SignupCard() {
             {loading ? <CircularProgress size={24} /> : "Sign Up"}
           </Button>
           <Typography variant="body2" textAlign="center" mt={2}>
-  Already have an account?{" "}
-  <Link to="/login" style={{ color: "#1976d2", textDecoration: "none", fontWeight: "bold" }}>
-    Log in
-  </Link>
-</Typography>
-
+            Already have an account? <Link to="/login">Log in</Link>
+          </Typography>
         </form>
       </Card>
     </Box>
     <Snackbar
-  open={snackbarOpen}
-  autoHideDuration={3000}
-  onClose={handleCloseSnackbar}
-  message={snackbarMessage}
-  anchorOrigin={{ vertical: 'top', horizontal: 'center' }} 
-/>
-
+      open={snackbarOpen}
+      autoHideDuration={3000}
+      onClose={handleCloseSnackbar}
+      message={snackbarMessage}
+    />
   </Box>
+
     </>
   );
 }

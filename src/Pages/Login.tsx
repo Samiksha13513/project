@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { useUser } from '../ContextApi/UserContext';
 import { FormDatas } from '../types/index';
 import { Link } from 'react-router-dom';
-import images2 from '../assets/image2.png';
+import images1 from '../assets/image1.png';
 
 const schema = Yup.object({
   email: Yup.string().email('Invalid email format').required('Email is required'),
@@ -64,7 +64,7 @@ const Login = () => {
         setSnackbarMessage('Login successful!');
         setSnackbarOpen(true);
         loginUser(user);
-        setNavigateAfterSnackbar(true); // Triggers redirect after snackbar closes
+        setNavigateAfterSnackbar(true); 
         setLoaderState(false);
       } else {
         setSnackbarMessage('Invalid credentials!');
@@ -79,7 +79,7 @@ const Login = () => {
       <Box
         flex={1}
         sx={{
-          backgroundImage: `url(${images2})`,
+          backgroundImage: `url(${images1})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
