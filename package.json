@@ -35,6 +35,9 @@
     "redux": "^5.0.1",
     "typescript-toastify": "^1.0.4",
     "yup": "^1.6.1"
+ 
+
+
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
