@@ -10,9 +10,9 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Logout from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../ContextApi/UserContext';
+import { useUser } from '../ContextApi/UserContext.tsx';
 
-export default function AccountMenu({ onNavigate }) {
+export default function AccountMenu({ onNavigate }: { onNavigate: (path: string) => void }) {
   const navigate = useNavigate();
   const { currentUser, logoutUser } = useUser();
 

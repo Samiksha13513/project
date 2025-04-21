@@ -19,7 +19,7 @@ import {
   Switch,
 } from "@mui/material";
 import { Visibility, Delete, Close, Search } from "@mui/icons-material";
-import { useUser } from "../ContextApi/UserContext";
+import { useUser } from "../ContextApi/UserContext.tsx";
 
 const Tables = () => {
   const { users, deleteUser, updateUserStatus, addUser, currentUser } = useUser();

@@ -1,6 +1,6 @@
 // src/ProtectedRoutes.tsx
 import { Navigate } from 'react-router-dom';
-import { useUser } from './ContextApi/UserContext';
+import { useUser } from './ContextApi/UserContext.tsx';
 import { ReactNode } from 'react';
 
 interface Props {

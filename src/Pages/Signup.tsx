@@ -11,7 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import { useState } from "react";
 import { useUser } from "../ContextApi/UserContext";
 import { Link } from 'react-router-dom';
-import  image2 from '../assets/image2.png';
+import image2 from '../assets/image2.png';
 
 export default function SignupCard() {
   const { addUser } = useUser();

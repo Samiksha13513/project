@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Box, Button, TextField, Modal, Typography, Paper, Avatar } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Task from '../Components/Task';
-import { useUser } from '../ContextApi/UserContext';
+import { useUser } from '../ContextApi/UserContext.tsx';
 
 const modalStyle = {
   position: 'absolute' as const,

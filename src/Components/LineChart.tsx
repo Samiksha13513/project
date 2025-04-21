@@ -18,19 +18,6 @@ const LineChart = () => {
       },
     ],
   };
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      tooltip: {
-        enabled: true,
-      },
-    },
-  };
-
   return (
    <Box sx={{
             marginTop:'44px',
@@ -38,7 +25,7 @@ const LineChart = () => {
             width:'300px',
             paddingLeft:'8px'
            }}>
-      <Line data={data} options={options} />
+      <Line data={data}  />
     </Box>
   );
 };
