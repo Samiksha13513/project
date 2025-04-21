@@ -1,37 +1,51 @@
 import React, { useState } from "react";
-import {Box, Button,FormControl,InputLabel, MenuItem,Select,TextField,Typography,} from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useUser } from "../ContextApi/UserContext.tsx";
 
-interface UserFormProps {
+interface TaskFormProps {
   onSubmit: (data: any) => void;
 }
-const Task: React.FC<UserFormProps> = ({ onSubmit }) => {
+
+const Task: React.FC<TaskFormProps> = ({ onSubmit }) => {
   const { users } = useUser();
   const [title, setTitle] = useState("");
   const [selectedUser, setSelectedUser] = useState("");
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState<File | null>(null);
+ 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!title || !selectedUser || !description) {
+      alert("Please fill all fields.");
+      return;
+    }
+
     const formData = {
       title,
-      user: selectedUser,
+      user: selectedUser, 
       description,
-      image,
+    
     };
+
     onSubmit(formData);
+
     setTitle("");
     setSelectedUser("");
     setDescription("");
-    setImage(null);
+   
   };
 
-  // const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files && e.target.files[0]) {
-  //     setImage(e.target.files[0]);
-  //   }
-  // };
+  
   return (
     <Box component="form" onSubmit={handleSubmit}>
       <Typography variant="h6" gutterBottom>
@@ -45,6 +59,7 @@ const Task: React.FC<UserFormProps> = ({ onSubmit }) => {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
+
       <FormControl fullWidth margin="normal">
         <InputLabel id="user-label">Assign To</InputLabel>
         <Select
@@ -55,7 +70,7 @@ const Task: React.FC<UserFormProps> = ({ onSubmit }) => {
         >
           {users.map((user) => (
             <MenuItem key={user.email} value={user.email}>
-              {user.name}
+              {user.name} ({user.email})
             </MenuItem>
           ))}
         </Select>
@@ -71,16 +86,7 @@ const Task: React.FC<UserFormProps> = ({ onSubmit }) => {
         onChange={(e) => setDescription(e.target.value)}
       />
 
-      {/* <Button variant="outlined" component="label" sx={{ mt: 2 }}>
-        Upload Profile Photo
-        <input type="file" hidden accept="image/*" onChange={handleImageUpload} />
-      </Button> */}
-
-      {image && (
-        <Typography variant="body2" sx={{ mt: 1 }}>
-          Selected: {image.name}
-        </Typography>
-      )}
+      
 
       <Button
         type="submit"

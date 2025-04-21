@@ -19,7 +19,7 @@ const modalStyle = {
 const STORAGE_KEY = 'taskRows';
 
 export default function DataTable() {
-  const { currentUser } = useUser();
+  const { currentUser, users } = useUser();
   const [rows, setRows] = useState<any[]>([]);
   const [search, setSearch] = useState('');
   const [openModal, setOpenModal] = useState(false);
@@ -28,53 +28,39 @@ export default function DataTable() {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored && currentUser?.email) {
       const allTasks = JSON.parse(stored);
-      const myTasks = allTasks.filter((task: any) => task.email === currentUser.email);
+      const myTasks = allTasks.filter((task: any) => task.assign === currentUser.email);
       setRows(myTasks);
     }
   }, [currentUser]);
 
-  
   const handleAddTask = (data: any) => {
     if (!currentUser) return;
 
-   
-    if (data.user !== currentUser.email) {
-      alert("You can only assign tasks to the logged-in user.");
+    const assignedUser = users.find((u) => u.email === data.user);
+    if (!assignedUser) {
+      alert("Selected assigned user not found");
       return;
     }
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const base64Image = data.image ? (reader.result as string) : '';
-      const storedImage = localStorage.getItem(`profileImage-${currentUser.email}`);
-
-    
-      const newRow = {
-        id: Date.now(),
-        profile: storedImage || base64Image,
-        name: currentUser.name,
-        email: currentUser.email,
-        title: data.title,
-        assign: currentUser.email,
-        description: data.description,
-      };
-
-      
-      const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-      const updated = [...existing, newRow];
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-
-   
-      const updatedVisible = updated.filter((task: any) => task.email === currentUser.email);
-      setRows(updatedVisible);
-      setOpenModal(false);
+    const newRow = {
+      id: Date.now(),
+      profile: localStorage.getItem(`profileImage-${data.user}`) || '',
+      name: assignedUser.name,
+      email: currentUser.email, 
+      title: data.title,
+      assign: data.user, 
+      description: data.description,
     };
 
-    if (data.image) {
-      reader.readAsDataURL(data.image);
-    } 
-  };
+    const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    const updated = [...existing, newRow];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
 
+    
+    const updatedVisible = updated.filter((task: any) => task.assign === currentUser.email);
+    setRows(updatedVisible);
+    setOpenModal(false);
+  };
 
   const filteredRows = rows.filter(
     (row) =>
@@ -108,7 +94,6 @@ export default function DataTable() {
           Task Assignments
         </Typography>
       </Box>
-
       <Box
         display="flex"
         justifyContent="space-between"
@@ -183,4 +168,4 @@ export default function DataTable() {
       </Modal>
     </Box>
   );
-  }
+}
