@@ -9,7 +9,7 @@ import Dashboard from './Pages/Dashboard';
 import Table from './Components/Table';
 import Profile from './Components/Profile';
 import { PrivateRoute, PublicRoute } from './ProtectedRoutes';
-import Task from './Components/Task';
+
 
 
 function App() {
@@ -26,7 +26,7 @@ function App() {
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/table" element={<PrivateRoute><Table /></PrivateRoute>} />
           <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-          <Route path="/task" element={<PrivateRoute><Task/></PrivateRoute>} />
+          {/* <Route path="/task" element={<PrivateRoute><Task/></PrivateRoute>} /> */}
         </Routes>
 
        

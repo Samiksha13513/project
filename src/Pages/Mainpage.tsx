@@ -28,7 +28,7 @@ const demoTheme = createTheme({
 });
 const CustomAppTitle = () => (
   <Box>
-    <Typography variant="h5">Dashboard</Typography>
+    <Typography variant="h5" >Dashboard</Typography>
   </Box>
 );
 function DemoPageContent({ pathname }: { pathname: string }) {
