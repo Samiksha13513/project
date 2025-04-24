@@ -10,6 +10,8 @@ import Table from "../Components/Table";
 import TaskTable from "../Pages/TaskTable";
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import Profile from "../Components/Profile";
+import DemoTask from "../Components/DemoTask";
+import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
 
 const demoTheme = createTheme({
   cssVariables: {
@@ -58,6 +60,11 @@ function DemoPageContent({ pathname }: { pathname: string }) {
           <TaskTable/>
         </div>
       )}
+       {pathname === "/demotask" && (
+        <div>
+          <DemoTask/>
+        </div>
+      )}
     </Box>
   );
 }
@@ -89,6 +96,7 @@ const Mainpage = () => {
         { segment: "dashboard", title: "OverView", icon: <DashboardIcon /> },
         { segment: "users", title: "Customers", icon: <PeopleIcon /> },
         { segment: "tasktable", title: "Task", icon: <AddTaskIcon/> },
+        { segment: "demotask", title: "DemoTask", icon: <AddToPhotosIcon/> },
       ]}
     >
       <DashboardLayout

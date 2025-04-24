@@ -1,18 +1,41 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { Paper, TextField, Box, Button } from '@mui/material';
+import { Paper, TextField, Box, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import AddTaskModal from './Tasks';
 import { RootState } from '../redux/store';
+import { Task, addTask, deleteTask } from '../redux/Taskslice';
 
 const DataTable = () => {
   const [search, setSearch] = useState('');
   const [openModal, setOpenModal] = useState(false);
+  const [viewTask, setViewTask] = useState<Task | null>(null);
+  const dispatch = useDispatch();
   const tasks = useSelector((state: RootState) => state.task.tasks);
 
   const filteredRows = tasks.filter((row) =>
     row.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  const handleAddTask = (data: Omit<Task, 'id'>) => {
+    const newTask: Task = { ...data, id: Date.now() };
+    dispatch(addTask(newTask));
+    setOpenModal(false);
+  };
+
+  const handleDeleteTask = (id: number) => {
+    dispatch(deleteTask(id));
+  };
+
+  const handleEditTask =
+  (id: number)=>{
+    dispatch(deleteTask(id));
+  };
+
 
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Name', width: 150 },
@@ -22,11 +45,19 @@ const DataTable = () => {
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 120,
+      width: 150,
       renderCell: (params) => (
-        <Button variant="outlined" size="small" onClick={() => alert(`Task ID: ${params.row.id}`)}>
-          View
-        </Button>
+        <>
+          <IconButton onClick={() => setViewTask(params.row)}>
+            <VisibilityIcon />
+          </IconButton>
+          <IconButton onClick={() => handleDeleteTask(params.row.id)} color="error">
+            <DeleteIcon />
+          </IconButton>
+          <IconButton onClick={() => handleEditTask(params.row.id)} color="error">
+            <EditIcon />
+          </IconButton>
+        </>
       ),
     },
   ];
@@ -51,16 +82,29 @@ const DataTable = () => {
         rows={filteredRows}
         columns={columns}
         getRowId={(row) => row.id}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
-          },
-        }}
         pageSizeOptions={[5, 10]}
+        initialState={{ pagination: { paginationModel: { page: 0, pageSize: 5 } } }}
         sx={{ border: 0 }}
       />
 
-      <AddTaskModal open={openModal} onClose={() => setOpenModal(false)} />
+      <AddTaskModal open={openModal} onClose={() => setOpenModal(false)} onSubmit={handleAddTask} />
+
+      <Dialog open={!!viewTask} onClose={() => setViewTask(null)}>
+        <DialogTitle>Task Details</DialogTitle>
+        <DialogContent dividers>
+          {viewTask && (
+            <>
+              <Typography variant="subtitle1"><strong>Name:</strong> {viewTask.name}</Typography>
+              <Typography variant="subtitle1"><strong>Email:</strong> {viewTask.email}</Typography>
+              <Typography variant="subtitle1"><strong>Title:</strong> {viewTask.title}</Typography>
+              <Typography variant="subtitle1"><strong>Description:</strong> {viewTask.description}</Typography>
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setViewTask(null)}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Paper>
   );
 };

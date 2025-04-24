@@ -1,97 +1,127 @@
-import React, { useState } from "react";
-import {
-  Box,Button,FormControl,InputLabel, MenuItem,Select,TextField,Typography,
-} from "@mui/material";
-import { useUser } from "../ContextApi/UserContext.tsx";
+import React from "react";
+import { Modal, Box, TextField, Button, Typography } from "@mui/material";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
-interface TaskFormProps {
-  onSubmit: (data: any) => void;
+interface AddTaskModalProps {
+  open: boolean;
+  onClose: () => void;
+  onSubmit: (data: {
+    name: string;
+    email: string;
+    title: string;
+    description: string;
+  }) => void;
 }
 
-const Task: React.FC<TaskFormProps> = ({ onSubmit }) => {
-  const { users } = useUser();
-  const [title, setTitle] = useState("");
-  const [selectedUser, setSelectedUser] = useState("");
-  const [description, setDescription] = useState("");
- 
+const schema = yup.object().shape({
+  name: yup
+    .string()
+    .required("Name is required")
+    .matches(/^[A-Za-z]+$/, "Only letters are allowed in name"),
+  email: yup
+    .string()
+    .required("Email is required")
+    .matches(/^[A-Za-z0-9]+@gmail\.com$/, "Must be a valid @gmail.com email"),
+  title: yup.string().required("Title is required"),
+  description: yup.string().required("Description is required"),
+});
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+const AddTaskModal: React.FC<AddTaskModalProps> = ({
+  open,
+  onClose,
+  onSubmit,
+}) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      name: "",
+      email: "",
+      title: "",
+      description: "",
+    },
+  });
 
-    if (!title || !selectedUser || !description) {
-      alert("Please fill all fields.");
-      return;
-    }
-
-    const formData = {
-      title,
-      user: selectedUser, 
-      description,
-    
-    };
-
-    onSubmit(formData);
-
-    setTitle("");
-    setSelectedUser("");
-    setDescription("");
-   
+  const handleFormSubmit = (data: any) => {
+    onSubmit(data);
+    reset();
   };
 
-  
   return (
-    <Box component="form" onSubmit={handleSubmit}>
-      <Typography variant="h6" gutterBottom>
-        Create New Task
-      </Typography>
-
-      <TextField
-        label="Title"
-        fullWidth
-        margin="normal"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-
-      <FormControl fullWidth margin="normal">
-        <InputLabel id="user-label">Assign To</InputLabel>
-        <Select
-          labelId="user-label"
-          value={selectedUser}
-          label="Assign To"
-          onChange={(e) => setSelectedUser(e.target.value)}
-        >
-          {users.map((user) => (
-            <MenuItem key={user.email} value={user.email}>
-              {user.name} ({user.email})
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-
-      <TextField
-        label="Description"
-        multiline
-        rows={4}
-        fullWidth
-        margin="normal"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      />
-
-      
-
-      <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        fullWidth
-        sx={{ mt: 3 }}
+    <Modal open={open} onClose={onClose}>
+      <Box
+        component="form"
+        onSubmit={handleSubmit(handleFormSubmit)}
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          bgcolor: "background.paper",
+          boxShadow: 24,
+          p: 4,
+          width: 400,
+        }}
       >
-        Submit
-      </Button>
-    </Box>
-  );
-};
+        <Typography variant="h6" mb={2}>
+          Add New Task
+        </Typography>
 
-export default Task;
+        <TextField
+label="Name"
+ fullWidth
+ margin="normal"
+{...register("name")}
+ error={!!errors.name}
+helperText={errors.name?.message}
+        />
+
+        <TextField
+          label="Email"
+          fullWidth
+          margin="normal"
+          {...register("email")}
+          error={!!errors.email}
+          helperText={errors.email?.message}
+        />
+
+        <TextField
+          label="Title"
+          fullWidth
+          margin="normal"
+          {...register("title")}
+          error={!!errors.title}
+          helperText={errors.title?.message}
+        />
+
+        <TextField
+          label="Description"
+          fullWidth
+          margin="normal"
+          multiline
+          rows={3}
+          {...register("description")}
+          error={!!errors.description}
+          helperText={errors.description?.message}
+        />
+
+        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+          Submit
+        </Button>
+      </Box>
+    </Modal>
+
+
+
+
+
+
+)};
+
+export default AddTaskModal;

@@ -33,10 +33,10 @@ const LineChart = () => {
 
   return (
    <Box sx={{
-            marginTop:'44px',
-            height:'400px',
-            width:'300px',
-            paddingLeft:'8px'
+            marginTop:'48px',
+            height:'500px',
+            width:'400px',
+            paddingLeft:'9px'
            }}>
       <Line data={data} options={options} />
     </Box>
