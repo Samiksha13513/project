@@ -27,11 +27,7 @@ const Task: React.FC<UserFormProps> = ({ onSubmit }) => {
     setImage(null);
   };
 
-  // const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files && e.target.files[0]) {
-  //     setImage(e.target.files[0]);
-  //   }
-  // };
+  
   return (
     <Box component="form" onSubmit={handleSubmit}>
       <Typography variant="h6" gutterBottom>
@@ -71,10 +67,7 @@ const Task: React.FC<UserFormProps> = ({ onSubmit }) => {
         onChange={(e) => setDescription(e.target.value)}
       />
 
-      {/* <Button variant="outlined" component="label" sx={{ mt: 2 }}>
-        Upload Profile Photo
-        <input type="file" hidden accept="image/*" onChange={handleImageUpload} />
-      </Button> */}
+   
 
       {image && (
         <Typography variant="body2" sx={{ mt: 1 }}>

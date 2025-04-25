@@ -25,7 +25,6 @@ const RadarChart = () => {
       },
     ],
   };
-
   return (
     <Box sx={{ width: 400, height: 300, m: 2 }}>
       <Radar data={data} />
