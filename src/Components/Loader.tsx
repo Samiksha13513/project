@@ -4,7 +4,6 @@ import Button from '@mui/material/Button';
 
 
 export default function SimpleBackdrop({ loaderState, setOpen }: { loaderState: boolean; setOpen: (state: boolean) => void }) {
-//   const [open, setOpen] = React.useState(false);
   const handleClose = () => {
     setOpen(false);
   };
